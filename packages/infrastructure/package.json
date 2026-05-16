@@ -1,0 +1,41 @@
+{
+  "name": "@kawal/infrastructure",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./db/schema": "./src/db/schema/pg.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "db:generate:pg": "drizzle-kit generate:pg --config=./drizzle.config.ts",
+    "db:generate:sqlite": "DATABASE_TYPE=sqlite drizzle-kit generate:sqlite --config=./drizzle.config.ts",
+    "db:generate": "pnpm db:generate:pg",
+    "db:migrate": "tsx src/db/migrate.ts"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.7.0",
+    "@kawal/application": "workspace:*",
+    "@kawal/domain": "workspace:*",
+    "better-sqlite3": "^9.4.0",
+    "drizzle-orm": "^0.30.0",
+    "jose": "^5.2.0",
+    "openid-client": "^5.6.0",
+    "pg": "^8.11.0",
+    "postgres": "^3.4.0",
+    "undici": "^6.10.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/pg": "^8.11.0",
+    "drizzle-kit": "^0.20.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.4.0"
+  }
+}

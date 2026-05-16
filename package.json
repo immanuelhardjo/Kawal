@@ -1,0 +1,37 @@
+{
+  "name": "kawal",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Kawal — personal OSINT workbench for Indonesian public-interest cases",
+  "license": "SEE LICENSE IN LICENSE",
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "audit:worker-free": "node tools/audit-worker-free.cjs",
+    "audit:editorial-tone": "node tools/audit-editorial-tone.cjs",
+    "audit:locale": "node tools/audit-locale.cjs",
+    "dev": "concurrently -k -n api,web -c blue,green \"pnpm --filter @kawal/api dev\" \"pnpm --filter @kawal/web dev\"",
+    "db:migrate": "pnpm --filter @kawal/infrastructure db:migrate",
+    "db:generate": "pnpm --filter @kawal/infrastructure db:generate"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.0",
+    "vitest": "^1.4.0"
+  }
+}

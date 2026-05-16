@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: kawal_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      # Test-suite environment. Provides defaults so integration tests that
+      # require Postgres can run; secret-bearing variables are intentionally
+      # placeholder so tests that need them either stub or skip.
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/kawal_test
+      NODE_ENV: test
+      SESSION_SECRET: ci-test-session-secret-min-32-characters-long
+      GOOGLE_OAUTH_CLIENT_ID: ci-test-client-id
+      GOOGLE_OAUTH_CLIENT_SECRET: ci-test-client-secret
+      GOOGLE_OAUTH_REDIRECT_URI: http://localhost:3000/auth/google/callback
+      WEB_ORIGIN: http://localhost:5173
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Spec validation — gate every PR on the change still validating.
+      - name: openspec validate --strict
+        run: npx openspec validate bootstrap-kawal-workbench --strict
+        # If the change has been archived in main, swap to `openspec validate --strict`
+        # to validate every spec under openspec/specs/.
+
+      # Static checks
+      - run: pnpm typecheck
+      - run: pnpm lint
+
+      # Worker-free runtime audit (design D5 — no scheduled worker tier).
+      - run: pnpm audit:worker-free
+
+      # Editorial-tone phrase scan over i18n bundles + product strings.
+      - run: pnpm audit:editorial-tone
+
+      # Bahasa-only display + English-identifier code audit.
+      - run: pnpm audit:locale
+
+      # Tests — unit & integration. Integration tests that require Postgres
+      # use the service container declared above.
+      - run: pnpm db:migrate
+      - run: pnpm test

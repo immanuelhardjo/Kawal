@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    font-family: theme('fontFamily.sans');
+  }
+
+  /* Document-like reading column for long-form content. */
+  .prose-doc {
+    max-width: 64ch;
+    line-height: 1.6;
+  }
+}
