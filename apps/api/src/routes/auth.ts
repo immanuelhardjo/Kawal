@@ -1,8 +1,19 @@
+import { ApplicationError } from '@kawal/application';
 import { Router } from 'express';
 import { z } from 'zod';
 import type { Composition } from '../composition.js';
 
 const OAUTH_TX_COOKIE = 'kawal_oauth_tx';
+
+const signUpBodySchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+const signInBodySchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
 
 const callbackQuerySchema = z.object({
   code: z.string().min(1),
@@ -74,6 +85,62 @@ export function authRoutes(composition: Composition): Router {
       });
       res.redirect(302, composition.env.WEB_ORIGIN);
     } catch (err) {
+      next(err);
+    }
+  });
+
+  router.post('/signup', async (req, res, next) => {
+    try {
+      const { email, password } = signUpBodySchema.parse(req.body);
+      const result = await composition.signUpWithPassword.execute({
+        email,
+        password,
+        ip: req.ip ?? null,
+        userAgent: req.get('user-agent') ?? null,
+      });
+      res.cookie(composition.env.SESSION_COOKIE_NAME, result.sessionId, {
+        httpOnly: true,
+        secure: composition.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: composition.env.SESSION_INACTIVITY_DAYS * 24 * 60 * 60 * 1000,
+      });
+      res.status(201).json({ id: result.user.id, displayName: result.user.displayName });
+    } catch (err) {
+      if (err instanceof ApplicationError && err.code === 'email_already_registered') {
+        res.status(409).json({ code: err.code, message: err.message });
+        return;
+      }
+      if (err instanceof ApplicationError && err.code === 'password_policy_violation') {
+        res.status(422).json({ code: err.code, message: err.message });
+        return;
+      }
+      next(err);
+    }
+  });
+
+  router.post('/signin', async (req, res, next) => {
+    try {
+      const { email, password } = signInBodySchema.parse(req.body);
+      const result = await composition.signInWithPassword.execute({
+        email,
+        password,
+        ip: req.ip ?? null,
+        userAgent: req.get('user-agent') ?? null,
+      });
+      res.cookie(composition.env.SESSION_COOKIE_NAME, result.sessionId, {
+        httpOnly: true,
+        secure: composition.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: composition.env.SESSION_INACTIVITY_DAYS * 24 * 60 * 60 * 1000,
+      });
+      res.status(200).json({ id: result.user.id, displayName: result.user.displayName });
+    } catch (err) {
+      if (err instanceof ApplicationError && err.code === 'invalid_credentials') {
+        res.status(401).json({ code: err.code, message: err.message });
+        return;
+      }
       next(err);
     }
   });

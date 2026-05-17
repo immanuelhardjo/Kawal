@@ -68,15 +68,15 @@ export function GarisWaktu({ caseDto }: GarisWaktuProps): JSX.Element {
       <header className="flex flex-wrap items-center gap-2 border-b border-rule px-3 py-2">
         <h2
           id="garis-waktu-heading"
-          className="text-sm font-medium uppercase tracking-wide text-muted"
+          className="text-sm font-medium uppercase tracking-wide text-chalk-muted"
         >
           Garis Waktu
         </h2>
-        <span className="text-xs text-muted">
+        <span className="text-xs text-chalk-muted">
           Tanggal aktif: {dateFmt.format(asOfDate)}
         </span>
         <div className="ml-auto flex flex-wrap items-center gap-1">
-          <span className="text-xs text-muted">Kepastian:</span>
+          <span className="text-xs text-chalk-muted">Kepastian:</span>
           {ALL_CERTAINTIES.map((c) => (
             <FilterChip
               key={c}
@@ -87,7 +87,7 @@ export function GarisWaktu({ caseDto }: GarisWaktuProps): JSX.Element {
           ))}
         </div>
         <div className="flex flex-wrap items-center gap-1">
-          <span className="text-xs text-muted">Jenis peristiwa:</span>
+          <span className="text-xs text-chalk-muted">Jenis peristiwa:</span>
           {ALL_EVENT_TYPES.map((t) => (
             <FilterChip
               key={t}
@@ -100,13 +100,13 @@ export function GarisWaktu({ caseDto }: GarisWaktuProps): JSX.Element {
       </header>
       <div className="relative flex-1">
         {timeline.loading ? (
-          <p className="absolute inset-0 grid place-items-center text-sm text-muted">Memuat…</p>
+          <p className="absolute inset-0 grid place-items-center text-sm text-chalk-muted">Memuat…</p>
         ) : timeline.error ? (
-          <p className="absolute inset-0 grid place-items-center text-sm text-muted">
+          <p className="absolute inset-0 grid place-items-center text-sm text-chalk-muted">
             Tidak dapat memuat timeline: {timeline.error}
           </p>
         ) : events.length === 0 ? (
-          <p className="absolute inset-0 grid place-items-center text-center text-sm text-muted">
+          <p className="absolute inset-0 grid place-items-center text-center text-sm text-chalk-muted">
             Belum ada peristiwa tercatat untuk kasus ini.
           </p>
         ) : (
@@ -148,20 +148,20 @@ function EventNode({ data, selected }: { data: EventNodeData; selected: boolean 
   return (
     <article
       className={
-        'w-56 rounded-md border bg-paper p-2 shadow-sm ' +
-        (selected ? 'border-ink' : 'border-rule')
+        'w-56 rounded-md border bg-board p-2 shadow-sm ' +
+        (selected ? 'border-amber-pin' : 'border-rule')
       }
     >
-      <header className="mb-1 flex items-center gap-2 text-xs text-muted">
+      <header className="mb-1 flex items-center gap-2 text-xs text-chalk-muted">
         <time dateTime={event.date}>{dateFmt.format(new Date(event.date))}</time>
       </header>
       <div className="mb-1 flex flex-wrap items-center gap-2">
         <CertaintyChip certainty={event.certainty} />
         {event.sourceIds.length > 0 ? (
-          <span className="text-xs text-muted">{event.sourceIds.length} sumber</span>
+          <span className="text-xs text-chalk-muted">{event.sourceIds.length} sumber</span>
         ) : null}
       </div>
-      <p className="text-sm text-ink">{event.title}</p>
+      <p className="text-sm text-chalk">{event.title}</p>
     </article>
   );
 }
@@ -188,7 +188,7 @@ function buildTimelineLayout(events: readonly EventDto[]): Map<string, { x: numb
 function BranchViewPlaceholder(): JSX.Element {
   return (
     <aside
-      className="border-t border-rule bg-paper/80 px-3 py-2 text-xs text-muted"
+      className="border-t border-rule bg-board/80 px-3 py-2 text-xs text-chalk-muted"
       aria-label="Skenario proyeksi"
     >
       Proyeksi (bukan prediksi) — skenario otomatis tersedia setelah modul AI scenario diaktifkan.

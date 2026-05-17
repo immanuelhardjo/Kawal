@@ -8,6 +8,13 @@
       "when": 1778940563048,
       "tag": "0000_burly_major_mapleleaf",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1778943155808,
+      "tag": "0001_next_black_cat",
+      "breakpoints": true
     }
   ]
 }

@@ -2,6 +2,7 @@ import type { User } from '@kawal/domain';
 
 export interface UserRepo {
   findByGoogleSub(googleSub: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
   findById(id: string): Promise<User | null>;
   save(user: User): Promise<void>;
   /**

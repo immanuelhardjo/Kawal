@@ -56,14 +56,14 @@ export function Riwayat({ aggregateType, aggregateId }: RiwayatProps): JSX.Eleme
   }, [aggregateType, aggregateId]);
 
   if (state.loading) {
-    return <p className="text-sm text-muted">Memuat riwayat…</p>;
+    return <p className="text-sm text-chalk-muted">Memuat riwayat…</p>;
   }
   if (state.error) {
-    return <p className="text-sm text-muted">Tidak dapat memuat riwayat: {state.error}</p>;
+    return <p className="text-sm text-chalk-muted">Tidak dapat memuat riwayat: {state.error}</p>;
   }
   const revisions = state.data?.revisions ?? [];
   if (revisions.length === 0) {
-    return <p className="text-sm text-muted">Belum ada riwayat tercatat.</p>;
+    return <p className="text-sm text-chalk-muted">Belum ada riwayat tercatat.</p>;
   }
   return (
     <ol className="space-y-3">
@@ -73,13 +73,13 @@ export function Riwayat({ aggregateType, aggregateId }: RiwayatProps): JSX.Eleme
         return (
           <li key={`${r.revisionNo}`} className="rounded-md border border-rule p-2 text-sm">
             <header className="mb-1 flex flex-wrap items-center justify-between gap-2 text-xs">
-              <span className="font-medium text-ink">Revisi #{r.revisionNo}</span>
-              <span className="text-muted">{CHANGE_LABELS[r.changeKind]}</span>
-              <span className="text-muted">{dateFmt.format(new Date(r.validFrom))}</span>
+              <span className="font-medium text-chalk">Revisi #{r.revisionNo}</span>
+              <span className="text-chalk-muted">{CHANGE_LABELS[r.changeKind]}</span>
+              <span className="text-chalk-muted">{dateFmt.format(new Date(r.validFrom))}</span>
             </header>
             {changedKeys.length > 0 ? (
-              <p className="text-xs text-muted">
-                Berubah: <span className="text-ink">{changedKeys.join(', ')}</span>
+              <p className="text-xs text-chalk-muted">
+                Berubah: <span className="text-chalk">{changedKeys.join(', ')}</span>
               </p>
             ) : null}
           </li>

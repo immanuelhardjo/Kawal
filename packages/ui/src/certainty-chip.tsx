@@ -1,9 +1,10 @@
 import type { CertaintyLabel } from '@kawal/contracts';
 
 /**
- * Spec: presentation-principles / D7.
+ * Spec: visual-identity / "Certainty label rendered as rubber stamp".
  *
- * Calm institutional pills. No animation, no urgency prop.
+ * Stamp style: uppercase, wide tracking, zero border-radius, 2px solid border
+ * in stamp colour, no filled background. No urgency/pulse props.
  */
 const labelMap: Record<CertaintyLabel, string> = {
   established: 'Terverifikasi',
@@ -14,11 +15,11 @@ const labelMap: Record<CertaintyLabel, string> = {
 };
 
 const classMap: Record<CertaintyLabel, string> = {
-  established: 'bg-certainty-established/10 text-certainty-established border-certainty-established/30',
-  alleged: 'bg-certainty-alleged/10 text-certainty-alleged border-certainty-alleged/30',
-  reported: 'bg-certainty-reported/10 text-certainty-reported border-certainty-reported/30',
-  disputed: 'bg-certainty-disputed/10 text-certainty-disputed border-certainty-disputed/30',
-  unverified: 'bg-certainty-unverified/10 text-certainty-unverified border-certainty-unverified/30',
+  established: 'border-stamp-verified text-stamp-verified',
+  alleged: 'border-stamp-alleged text-stamp-alleged',
+  reported: 'border-stamp-reported text-stamp-reported',
+  disputed: 'border-stamp-disputed text-stamp-disputed',
+  unverified: 'border-stamp-unverified text-stamp-unverified',
 };
 
 export interface CertaintyChipProps {
@@ -28,7 +29,7 @@ export interface CertaintyChipProps {
 export function CertaintyChip({ certainty }: CertaintyChipProps): JSX.Element {
   return (
     <span
-      className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium ${classMap[certainty]}`}
+      className={`inline-flex items-center border-2 bg-transparent px-2 py-0.5 text-[10px] uppercase tracking-widest ${classMap[certainty]}`}
       aria-label={`Tingkat kepastian: ${labelMap[certainty]}`}
     >
       {labelMap[certainty]}

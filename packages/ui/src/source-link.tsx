@@ -13,7 +13,7 @@ export function SourceLink({ sourceId, publisher, onOpen }: SourceLinkProps): JS
     <button
       type="button"
       onClick={() => onOpen?.(sourceId)}
-      className="inline-flex items-center gap-1 rounded-md border border-rule px-2 py-0.5 text-xs text-muted hover:text-ink hover:border-ink/40"
+      className="inline-flex items-center gap-1 rounded-md border border-rule px-2 py-0.5 text-xs text-chalk-muted hover:text-chalk hover:border-chalk/40"
       aria-label={`Lihat sumber: ${publisher}`}
     >
       <span aria-hidden>{'§'}</span>

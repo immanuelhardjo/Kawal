@@ -3,24 +3,29 @@ export default {
   content: ['./index.html', './src/**/*.{ts,tsx}', '../../packages/ui/src/**/*.{ts,tsx}'],
   theme: {
     extend: {
-      // Calm, document-like palette per presentation-principles / cool tone.
+      // Chalkboard-noir palette — visual-identity spec.
       colors: {
-        paper: '#fafaf9',
-        ink: '#1f1f1f',
-        muted: '#6b7280',
-        rule: '#e5e7eb',
-        accent: '#374151',
-        certainty: {
-          established: '#1f4f3a',
-          alleged: '#7a4f1a',
-          reported: '#37526b',
-          disputed: '#7a2f3a',
-          unverified: '#4b5563',
-        },
+        board: '#1F3529',
+        'board-shadow': '#172B22',
+        parchment: '#EDE8D0',
+        chalk: '#F0EBD8',
+        'chalk-muted': '#9DB89A',
+        string: '#C0392B',
+        'amber-pin': '#D4A017',
+        rule: '#2D5040',
+        'stamp-verified': '#27AE60',
+        'stamp-alleged': '#E67E22',
+        'stamp-reported': '#3498DB',
+        'stamp-disputed': '#8E44AD',
+        'stamp-unverified': '#95A5A6',
       },
       fontFamily: {
-        sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
-        serif: ['"Source Serif Pro"', 'Georgia', 'serif'],
+        // Body font — IBM Plex Serif (default sans alias so existing font-sans usages work)
+        sans: ['"IBM Plex Serif"', 'Georgia', 'serif'],
+        // Headline — Playfair Display
+        headline: ['"Playfair Display"', 'Georgia', 'serif'],
+        // Typewriter IDs / timestamps / source snippets — Special Elite
+        mono: ['"Special Elite"', 'Courier New', 'monospace'],
       },
     },
   },

@@ -37,40 +37,40 @@ export function BerandaScreen(): JSX.Element {
   return (
     <main className="mx-auto max-w-3xl space-y-8 p-6">
       <header>
-        <h1 className="font-serif text-3xl text-ink">{t('beranda.title')}</h1>
+        <h1 className="font-headline text-3xl text-chalk">{t('beranda.title')}</h1>
       </header>
 
       <section aria-labelledby="briefing">
-        <h2 id="briefing" className="text-sm font-medium uppercase tracking-wide text-muted">
+        <h2 id="briefing" className="text-sm font-medium uppercase tracking-wide text-chalk-muted">
           {t('beranda.briefingHeading')}
         </h2>
-        <p className="prose-doc mt-2 text-ink">{t('beranda.briefingEmpty')}</p>
+        <p className="prose-doc mt-2 text-chalk">{t('beranda.briefingEmpty')}</p>
       </section>
 
       <section aria-labelledby="what-changed">
-        <h2 id="what-changed" className="text-sm font-medium uppercase tracking-wide text-muted">
+        <h2 id="what-changed" className="text-sm font-medium uppercase tracking-wide text-chalk-muted">
           {t('beranda.whatChangedHeading')}
         </h2>
-        <p className="mt-2 text-sm text-muted">{t('beranda.whatChangedEmpty')}</p>
+        <p className="mt-2 text-sm text-chalk-muted">{t('beranda.whatChangedEmpty')}</p>
       </section>
 
       <section aria-labelledby="library">
-        <h2 id="library" className="text-sm font-medium uppercase tracking-wide text-muted">
+        <h2 id="library" className="text-sm font-medium uppercase tracking-wide text-chalk-muted">
           {t('beranda.libraryHeading')}
         </h2>
         <div className="mt-3">
           {cases === null ? (
-            <p className="text-sm text-muted">{t('common.loading')}</p>
+            <p className="text-sm text-chalk-muted">{t('common.loading')}</p>
           ) : cases.length === 0 ? (
-            <p className="text-sm text-muted">{t('beranda.libraryEmpty')}</p>
+            <p className="text-sm text-chalk-muted">{t('beranda.libraryEmpty')}</p>
           ) : (
             <ul className="divide-y divide-rule">
               {cases.map((c) => (
                 <li key={c.id} className="py-3">
-                  <Link to={`/kasus/${c.id}`} className="text-ink hover:underline">
+                  <Link to={`/kasus/${c.id}`} className="text-chalk hover:underline">
                     {c.name}
                   </Link>
-                  <span className="ml-2 text-xs text-muted">{c.jurisdiction}</span>
+                  <span className="ml-2 text-xs text-chalk-muted">{c.jurisdiction}</span>
                 </li>
               ))}
             </ul>
@@ -81,13 +81,13 @@ export function BerandaScreen(): JSX.Element {
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder={t('beranda.newCase')}
-            className="flex-1 rounded-md border border-rule bg-paper px-3 py-2 text-sm"
+            className="flex-1 rounded-md border border-rule bg-board px-3 py-2 text-sm"
           />
           <button
             type="button"
             disabled={creating || !newName.trim()}
             onClick={() => void handleCreate()}
-            className="rounded-md bg-ink px-4 py-2 text-sm text-paper disabled:opacity-50"
+            className="rounded-md bg-amber-pin px-4 py-2 text-sm text-board disabled:opacity-50"
           >
             {t('beranda.newCase')}
           </button>

@@ -16,10 +16,11 @@
     "db:generate:pg": "drizzle-kit generate:pg --config=./drizzle.config.ts",
     "db:generate:sqlite": "DATABASE_TYPE=sqlite drizzle-kit generate:sqlite --config=./drizzle.config.ts",
     "db:generate": "pnpm db:generate:pg",
-    "db:migrate": "tsx src/db/migrate.ts"
+    "db:migrate": "tsx --env-file=../../apps/backend/.env src/db/migrate.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.7.0",
+    "argon2": "^0.31.2",
     "@kawal/application": "workspace:*",
     "@kawal/domain": "workspace:*",
     "better-sqlite3": "^9.4.0",

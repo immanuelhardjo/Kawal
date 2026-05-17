@@ -24,14 +24,14 @@ export function SourcePanel({ relationship, onClose }: SourcePanelProps): JSX.El
   if (!relationship) return null;
   return (
     <aside
-      className="fixed bottom-0 right-0 top-0 z-30 w-full max-w-md overflow-y-auto border-l border-rule bg-paper p-4 shadow-lg"
+      className="fixed bottom-0 right-0 top-0 z-30 w-full max-w-md overflow-y-auto border-l border-rule bg-board p-4 shadow-lg"
       role="dialog"
       aria-modal="true"
       aria-label="Detail relasi"
     >
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-ink">Relasi</h3>
-        <button type="button" onClick={onClose} className="text-sm text-muted hover:text-ink">
+        <h3 className="text-sm font-semibold text-chalk">Relasi</h3>
+        <button type="button" onClick={onClose} className="text-sm text-chalk-muted hover:text-chalk">
           Tutup
         </button>
       </div>
@@ -61,8 +61,8 @@ export function SourcePanel({ relationship, onClose }: SourcePanelProps): JSX.El
 function Row({ label, value }: { label: string; value: string }): JSX.Element {
   return (
     <div className="flex flex-col">
-      <dt className="text-xs uppercase tracking-wide text-muted">{label}</dt>
-      <dd className="text-ink">{value}</dd>
+      <dt className="text-xs uppercase tracking-wide text-chalk-muted">{label}</dt>
+      <dd className="text-chalk">{value}</dd>
     </div>
   );
 }

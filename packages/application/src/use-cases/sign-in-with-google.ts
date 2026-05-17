@@ -75,23 +75,38 @@ export class SignInWithGoogle {
       throw new ApplicationError('sign_in_failure', 'Google account email is not verified');
     }
 
-    const existing = await this.deps.users.findByGoogleSub(claims.sub);
+    const byGoogleSub = await this.deps.users.findByGoogleSub(claims.sub);
     const now = this.deps.now();
-    const user = existing
-      ? existing.recordSignIn({
+    let user = byGoogleSub
+      ? byGoogleSub.recordSignIn({
           email: claims.email,
           displayName: claims.name,
           pictureUrl: claims.picture,
           now,
         })
-      : User.create({
-          id: this.deps.newId(),
-          googleSub: claims.sub,
-          email: claims.email,
-          displayName: claims.name,
-          pictureUrl: claims.picture,
-          now,
-        });
+      : null;
+
+    if (!user) {
+      // Spec: password-auth / "Silent account linking on Google sign-in".
+      const byEmail = await this.deps.users.findByEmail(claims.email);
+      user = byEmail
+        ? byEmail.linkGoogleSub({
+            googleSub: claims.sub,
+            email: claims.email,
+            displayName: claims.name,
+            pictureUrl: claims.picture,
+            now,
+          })
+        : User.create({
+            id: this.deps.newId(),
+            googleSub: claims.sub,
+            email: claims.email,
+            displayName: claims.name,
+            pictureUrl: claims.picture,
+            now,
+          });
+    }
+
     await this.deps.users.save(user);
 
     const { sessionId } = await this.deps.sessions.create({

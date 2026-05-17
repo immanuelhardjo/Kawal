@@ -19,7 +19,7 @@ export function AuthGuard(): JSX.Element {
 
   if (state.kind === 'loading') {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted">
+      <div className="flex h-full items-center justify-center text-sm text-chalk-muted">
         {t('common.loading')}
       </div>
     );

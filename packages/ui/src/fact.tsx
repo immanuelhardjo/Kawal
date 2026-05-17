@@ -32,7 +32,7 @@ function FactRow({ certainty, sources, children, onSourceOpen }: FactRowProps): 
           <SourceLink key={s.id} sourceId={s.id} publisher={s.publisher} onOpen={onSourceOpen} />
         ))}
       </header>
-      <div className="prose-doc text-ink">{children}</div>
+      <div className="prose-doc text-chalk">{children}</div>
     </article>
   );
 }

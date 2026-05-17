@@ -20,31 +20,31 @@ export function AccountScreen(): JSX.Element {
 
   return (
     <main className="mx-auto max-w-2xl p-6">
-      <h1 className="font-serif text-2xl text-ink">{t('account.title')}</h1>
+      <h1 className="font-headline text-2xl text-chalk">{t('account.title')}</h1>
       <dl className="mt-6 grid grid-cols-[max-content_1fr] gap-x-4 gap-y-3 text-sm">
-        <dt className="text-muted">{t('account.displayName')}</dt>
-        <dd className="text-ink">{user.displayName}</dd>
-        <dt className="text-muted">{t('account.email')}</dt>
-        <dd className="text-ink">{user.email}</dd>
+        <dt className="text-chalk-muted">{t('account.displayName')}</dt>
+        <dd className="text-chalk">{user.displayName}</dd>
+        <dt className="text-chalk-muted">{t('account.email')}</dt>
+        <dd className="text-chalk">{user.email}</dd>
       </dl>
 
       <div className="mt-8 flex flex-wrap gap-3">
         <a
-          className="rounded-md border border-rule px-4 py-2 text-sm text-ink hover:border-ink/40"
+          className="rounded-md border border-rule px-4 py-2 text-sm text-chalk hover:border-chalk/40"
           href={api.exportDossierUrl}
         >
           {t('account.export')}
         </a>
         <button
           type="button"
-          className="rounded-md border border-rule px-4 py-2 text-sm text-ink hover:border-ink/40"
+          className="rounded-md border border-rule px-4 py-2 text-sm text-chalk hover:border-chalk/40"
           onClick={() => void handleSignOut()}
         >
           {t('account.signOut')}
         </button>
         <button
           type="button"
-          className="rounded-md border border-certainty-disputed/40 px-4 py-2 text-sm text-certainty-disputed hover:bg-certainty-disputed/5"
+          className="rounded-md border border-stamp-disputed/40 px-4 py-2 text-sm text-stamp-disputed hover:bg-stamp-disputed/5"
           onClick={() => setConfirming(true)}
         >
           {t('account.delete')}
@@ -52,8 +52,8 @@ export function AccountScreen(): JSX.Element {
       </div>
 
       {confirming ? (
-        <div className="mt-6 rounded-md border border-rule bg-paper p-4">
-          <p className="text-sm text-ink">{t('account.deleteConfirm')}</p>
+        <div className="mt-6 rounded-md border border-rule bg-board p-4">
+          <p className="text-sm text-chalk">{t('account.deleteConfirm')}</p>
           <div className="mt-3 flex gap-3">
             <button
               type="button"
@@ -64,7 +64,7 @@ export function AccountScreen(): JSX.Element {
             </button>
             <button
               type="button"
-              className="rounded-md bg-certainty-disputed px-3 py-1.5 text-sm text-paper"
+              className="rounded-md bg-stamp-disputed px-3 py-1.5 text-sm text-chalk"
               onClick={() => void handleDelete()}
             >
               {t('common.confirm')}

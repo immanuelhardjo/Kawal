@@ -14,7 +14,9 @@ import {
   LabelClusters,
   ScanGlossaryBacklog,
   SignInWithGoogle,
+  SignInWithPassword,
   SignOut,
+  SignUpWithPassword,
   SubscribeToCase,
   VerifyClaim,
   type ClusterLabelPort,
@@ -26,6 +28,7 @@ import {
   type VerificationPort,
 } from '@kawal/application';
 import {
+  Argon2Adapter,
   DrizzleAuditLogRepo,
   DrizzleCaseRepo,
   DrizzleClaimRepo,
@@ -71,6 +74,8 @@ export interface Composition {
   readonly archive: WaybackArchiveAdapter;
 
   readonly signInWithGoogle: SignInWithGoogle;
+  readonly signInWithPassword: SignInWithPassword;
+  readonly signUpWithPassword: SignUpWithPassword;
   readonly signOut: SignOut;
   readonly deleteAccount: DeleteAccount;
   readonly exportMyDossier: ExportMyDossier;
@@ -217,6 +222,8 @@ export function compose(env: Env): CompositionWithClose {
     archive,
 
     signInWithGoogle: new SignInWithGoogle({ idp: idp ?? noopIdp, users, sessions, audit, newId, now }),
+    signInWithPassword: new SignInWithPassword({ users, sessions, audit, passwordHash: new Argon2Adapter(), newId, now }),
+    signUpWithPassword: new SignUpWithPassword({ users, sessions, audit, passwordHash: new Argon2Adapter(), newId, now }),
     signOut: new SignOut({ sessions, audit, newId, now }),
     deleteAccount: new DeleteAccount({ users, audit, newId, now }),
     exportMyDossier: new ExportMyDossier({ cases, subscriptions }),

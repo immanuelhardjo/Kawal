@@ -25,28 +25,26 @@ export function SourceSidePanel({ open, source, onClose }: SourceSidePanelProps)
   if (!open || !source) return null;
   return (
     <aside
-      className="fixed inset-y-0 right-0 z-40 w-full max-w-md border-l border-rule bg-paper p-4 shadow-lg"
-      role="dialog"
-      aria-modal="true"
+      className="fixed inset-y-0 right-0 z-40 w-full max-w-md border-l border-rule bg-board p-4 shadow-lg"
       aria-label="Detail sumber"
     >
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-ink">{source.publisher}</h3>
-        <button type="button" onClick={onClose} className="text-sm text-muted hover:text-ink">
+        <h3 className="text-sm font-semibold text-chalk">{source.publisher}</h3>
+        <button type="button" onClick={onClose} className="text-sm text-chalk-muted hover:text-chalk">
           Tutup
         </button>
       </div>
-      <p className="text-xs text-muted">Diambil {dateFmt.format(source.fetchedAt)}</p>
-      <blockquote className="my-3 border-l-2 border-rule pl-3 text-sm italic text-ink">
+      <p className="text-xs text-chalk-muted">Diambil {dateFmt.format(source.fetchedAt)}</p>
+      <blockquote className="my-3 border-l-2 border-rule pl-3 text-sm italic text-chalk">
         {source.excerpt}
       </blockquote>
       <div className="space-y-1 text-xs">
-        <a className="block text-accent underline" href={source.url} target="_blank" rel="noreferrer">
+        <a className="block text-amber-pin underline" href={source.url} target="_blank" rel="noreferrer">
           Tautan asli
         </a>
         {source.archiveUrl ? (
           <a
-            className="block text-accent underline"
+            className="block text-amber-pin underline"
             href={source.archiveUrl}
             target="_blank"
             rel="noreferrer"
@@ -54,7 +52,7 @@ export function SourceSidePanel({ open, source, onClose }: SourceSidePanelProps)
             Salinan arsip
           </a>
         ) : (
-          <span className="block text-muted">Salinan arsip tidak tersedia.</span>
+          <span className="block text-chalk-muted">Salinan arsip tidak tersedia.</span>
         )}
       </div>
     </aside>

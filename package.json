@@ -18,7 +18,7 @@
     "audit:worker-free": "node tools/audit-worker-free.cjs",
     "audit:editorial-tone": "node tools/audit-editorial-tone.cjs",
     "audit:locale": "node tools/audit-locale.cjs",
-    "dev": "concurrently -k -n api,web -c blue,green \"pnpm --filter @kawal/api dev\" \"pnpm --filter @kawal/web dev\"",
+    "dev": "concurrently -k -n backend,frontend -c blue,green \"pnpm --filter @kawal/backend dev\" \"pnpm --filter @kawal/frontend dev\"",
     "db:migrate": "pnpm --filter @kawal/infrastructure db:migrate",
     "db:generate": "pnpm --filter @kawal/infrastructure db:generate"
   },

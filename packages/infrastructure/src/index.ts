@@ -17,6 +17,7 @@ export { DrizzleIngestActivityRepo } from './repositories/drizzle-ingest-activit
 
 // Identity
 export { GoogleOidcAdapter, type GoogleOidcConfig } from './identity/google-oidc-adapter.js';
+export { Argon2Adapter } from './identity/argon2-adapter.js';
 
 // AI
 export { GeminiAdapter } from './ai/gemini-adapter.js';

@@ -18,15 +18,17 @@ export const users = sqliteTable(
   'users',
   {
     id: text('id').primaryKey(),
-    googleSub: text('google_sub').notNull(),
+    googleSub: text('google_sub'),
     email: text('email').notNull(),
     displayName: text('display_name').notNull(),
     pictureUrl: text('picture_url'),
+    passwordHash: text('password_hash'),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
     lastSignedInAt: integer('last_signed_in_at', { mode: 'timestamp' }).notNull(),
   },
   (t) => ({
     googleSubIdx: uniqueIndex('users_google_sub_idx').on(t.googleSub),
+    emailIdx: uniqueIndex('users_email_idx').on(t.email),
   }),
 );
 

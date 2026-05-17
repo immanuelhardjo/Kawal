@@ -11,6 +11,9 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@fontsource/ibm-plex-serif": "^5.2.7",
+    "@fontsource/playfair-display": "^5.2.8",
+    "@fontsource/special-elite": "^5.2.8",
     "@kawal/contracts": "workspace:*",
     "@kawal/ui": "workspace:*",
     "i18next": "^23.10.0",

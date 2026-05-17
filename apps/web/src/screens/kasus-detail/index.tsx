@@ -24,7 +24,7 @@ export function KasusDetailScreen(): JSX.Element {
   if (!caseId) {
     return (
       <main className="p-6">
-        <p className="text-sm text-muted">ID kasus tidak ditemukan.</p>
+        <p className="text-sm text-chalk-muted">ID kasus tidak ditemukan.</p>
       </main>
     );
   }
@@ -45,18 +45,18 @@ function KasusDetailLayout(): JSX.Element {
   void refreshTick;
 
   return (
-    <div className="flex h-screen flex-col bg-paper">
-      <header className="flex flex-wrap items-center gap-3 border-b border-rule bg-paper px-4 py-2">
-        <Link to="/" className="text-xs text-muted hover:text-ink">
+    <div className="flex h-screen flex-col bg-board">
+      <header className="flex flex-wrap items-center gap-3 border-b border-rule bg-board px-4 py-2">
+        <Link to="/" className="text-xs text-chalk-muted hover:text-chalk">
           ← Beranda
         </Link>
-        <h1 className="font-serif text-lg text-ink">
+        <h1 className="font-headline text-lg text-chalk">
           {caseQ.data?.name ?? 'Memuat…'}
         </h1>
         {caseQ.data ? (
           <>
-            <span className="text-xs text-muted">{caseQ.data.jurisdiction}</span>
-            <span className="rounded-md border border-rule px-2 py-0.5 text-xs text-muted">
+            <span className="text-xs text-chalk-muted">{caseQ.data.jurisdiction}</span>
+            <span className="rounded-md border border-rule px-2 py-0.5 text-xs text-chalk-muted">
               {caseQ.data.status}
             </span>
           </>
@@ -79,7 +79,7 @@ function KasusDetailLayout(): JSX.Element {
         </div>
         {/* Dosier — collapsed by default on phone */}
         <details className="order-3 border-b border-rule lg:order-1 lg:h-auto lg:min-h-0 lg:w-72 lg:shrink-0 lg:border-b-0" open>
-          <summary className="cursor-pointer px-3 py-2 text-sm font-medium uppercase tracking-wide text-muted lg:hidden">
+          <summary className="cursor-pointer px-3 py-2 text-sm font-medium uppercase tracking-wide text-chalk-muted lg:hidden">
             Dosier
           </summary>
           <div className="h-72 lg:h-full">

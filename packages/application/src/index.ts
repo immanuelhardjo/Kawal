@@ -15,6 +15,7 @@ export type {
   IdentityProviderPort,
 } from './ports/identity-provider-port.js';
 export type { SessionContext, SessionStorePort } from './ports/session-store-port.js';
+export type { PasswordHashPort } from './ports/password-hash-port.js';
 export type {
   AIScope,
   AudioBriefing,
@@ -69,6 +70,8 @@ export type { AuditEntry, AuditEventKind, AuditLogRepo } from './repositories/au
 
 // Use cases
 export { SignInWithGoogle, type CompleteSignInInput, type CompleteSignInResult } from './use-cases/sign-in-with-google.js';
+export { SignInWithPassword, type SignInWithPasswordDeps, type SignInWithPasswordInput, type SignInWithPasswordResult } from './use-cases/sign-in-with-password.js';
+export { SignUpWithPassword, type SignUpWithPasswordDeps, type SignUpWithPasswordInput, type SignUpWithPasswordResult } from './use-cases/sign-up-with-password.js';
 export { SignOut } from './use-cases/sign-out.js';
 export { DeleteAccount } from './use-cases/delete-account.js';
 export { CreateCase, type CreateCaseInput } from './use-cases/create-case.js';

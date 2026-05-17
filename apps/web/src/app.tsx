@@ -4,12 +4,14 @@ import { AccountScreen } from './screens/account.js';
 import { BerandaScreen } from './screens/beranda.js';
 import { KasusDetailScreen } from './screens/kasus-detail/index.js';
 import { SignInScreen } from './screens/sign-in.js';
+import { SignUpScreen } from './screens/sign-up.js';
 
 export function App(): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/sign-in" element={<SignInScreen />} />
+        <Route path="/sign-up" element={<SignUpScreen />} />
         <Route element={<AuthGuard />}>
           <Route path="/" element={<BerandaScreen />} />
           <Route path="/kasus/:caseId" element={<KasusDetailScreen />} />

@@ -47,15 +47,15 @@ export function Profil({ entityId, onClose, onOpenGlossary }: ProfilProps): JSX.
 
   return (
     <aside
-      className="fixed inset-x-0 bottom-0 z-30 max-h-[70vh] overflow-y-auto rounded-t-xl border-t border-rule bg-paper p-4 shadow-lg sm:inset-y-0 sm:right-0 sm:left-auto sm:w-[420px] sm:max-h-none sm:rounded-none sm:border-l sm:border-t-0"
+      className="fixed inset-x-0 bottom-0 z-30 max-h-[70vh] overflow-y-auto rounded-t-xl border-t border-rule bg-board p-4 shadow-lg sm:inset-y-0 sm:right-0 sm:left-auto sm:w-[420px] sm:max-h-none sm:rounded-none sm:border-l sm:border-t-0"
       role="complementary"
       aria-label="Profil entitas"
     >
       <header className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <h2 className="font-serif text-lg text-ink">{entity?.canonicalName ?? 'Memuat…'}</h2>
+          <h2 className="font-headline text-lg text-chalk">{entity?.canonicalName ?? 'Memuat…'}</h2>
           {entity ? (
-            <p className="text-xs uppercase tracking-wide text-muted">
+            <p className="text-xs uppercase tracking-wide text-chalk-muted">
               {NODE_TYPE_LABELS_BAHASA[entity.type]}
             </p>
           ) : null}
@@ -63,7 +63,7 @@ export function Profil({ entityId, onClose, onOpenGlossary }: ProfilProps): JSX.
         <button
           type="button"
           onClick={onClose}
-          className="text-sm text-muted hover:text-ink"
+          className="text-sm text-chalk-muted hover:text-chalk"
         >
           Tutup
         </button>
@@ -100,7 +100,7 @@ function ProfilContent({
   readonly onOpenGlossary?: (term: string) => void;
 }): JSX.Element {
   if (loading || !entity) {
-    return <p className="text-sm text-muted">Memuat…</p>;
+    return <p className="text-sm text-chalk-muted">Memuat…</p>;
   }
   if (tab === 'profil') {
     return <ProfilBody entity={entity} onOpenGlossary={onOpenGlossary} />;
@@ -122,8 +122,8 @@ function TabButton({ active, onClick, children }: TabButtonProps): JSX.Element {
       className={
         '-mb-px border-b-2 px-3 py-1.5 text-xs uppercase tracking-wide ' +
         (active
-          ? 'border-ink text-ink'
-          : 'border-transparent text-muted hover:text-ink')
+          ? 'border-amber-pin text-chalk'
+          : 'border-transparent text-chalk-muted hover:text-chalk')
       }
       aria-current={active ? 'page' : undefined}
     >
@@ -152,7 +152,7 @@ function ProfilBody({
         {getString(profile, 'lhkpnUrl') ? (
           <Section title="LHKPN">
             <a
-              className="text-sm text-accent underline"
+              className="text-sm text-amber-pin underline"
               href={getString(profile, 'lhkpnUrl') ?? '#'}
               target="_blank"
               rel="noreferrer"
@@ -170,7 +170,7 @@ function ProfilBody({
     return (
       <div className="space-y-4">
         <Section title="Mandat">
-          <p className="text-sm text-ink">
+          <p className="text-sm text-chalk">
             {getStringObject(profile, 'mandate', 'value') ?? '—'}
           </p>
         </Section>
@@ -197,7 +197,7 @@ function ProfilBody({
       <Section title="Tautan dokumen asli">
         {getString(profile, 'originalPdfUrl') ? (
           <a
-            className="text-sm text-accent underline"
+            className="text-sm text-amber-pin underline"
             href={getString(profile, 'originalPdfUrl') ?? '#'}
             target="_blank"
             rel="noreferrer"
@@ -205,7 +205,7 @@ function ProfilBody({
             Buka PDF asli
           </a>
         ) : (
-          <p className="text-sm text-muted">URL dokumen belum tersedia.</p>
+          <p className="text-sm text-chalk-muted">URL dokumen belum tersedia.</p>
         )}
       </Section>
     </div>
@@ -215,7 +215,7 @@ function ProfilBody({
 function Section({ title, children }: { title: string; children: React.ReactNode }): JSX.Element {
   return (
     <section>
-      <h3 className="mb-1 text-xs font-medium uppercase tracking-wide text-muted">{title}</h3>
+      <h3 className="mb-1 text-xs font-medium uppercase tracking-wide text-chalk-muted">{title}</h3>
       {children}
     </section>
   );
@@ -223,10 +223,10 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function List({ items }: { items: readonly string[] }): JSX.Element {
   if (items.length === 0) {
-    return <p className="text-sm text-muted">—</p>;
+    return <p className="text-sm text-chalk-muted">—</p>;
   }
   return (
-    <ul className="list-disc pl-5 text-sm text-ink">
+    <ul className="list-disc pl-5 text-sm text-chalk">
       {items.map((item) => (
         <li key={item}>{item}</li>
       ))}
@@ -242,7 +242,7 @@ function GlossaryHint({
   onOpen?: (term: string) => void;
 }): JSX.Element {
   return (
-    <p className="text-xs text-muted">
+    <p className="text-xs text-chalk-muted">
       Tap istilah hukum untuk penjelasan singkat —{' '}
       <button type="button" className="underline" onClick={() => onOpen?.(term)}>
         {term}

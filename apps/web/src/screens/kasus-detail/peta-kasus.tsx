@@ -47,12 +47,12 @@ export function PetaKasus({
         position: pos,
         data: { label: entity.canonicalName, entity },
         style: {
-          background: nodeBg(entity),
-          color: '#1f1f1f',
+          background: '#EDE8D0',
+          color: '#1F3529',
           border:
-            entity.id === selectedEntityId ? '2px solid #1f1f1f' : '1px solid #e5e7eb',
+            entity.id === selectedEntityId ? '2px solid #D4A017' : '1px solid #2D5040',
           padding: 8,
-          borderRadius: 8,
+          borderRadius: 4,
           width: 160,
           fontSize: 12,
         },
@@ -70,8 +70,8 @@ export function PetaKasus({
       label: edge.type,
       data: { edge },
       style: { stroke: edgeStroke(edge), strokeWidth: 1.5 },
-      labelStyle: { fontSize: 10, fill: '#6b7280' },
-      labelBgStyle: { fill: '#fafaf9' },
+      labelStyle: { fontSize: 10, fill: '#9DB89A' },
+      labelBgStyle: { fill: '#1F3529' },
     }));
   }, [graph.data?.edges]);
 
@@ -81,12 +81,12 @@ export function PetaKasus({
   return (
     <section className="flex h-full flex-col" aria-labelledby="peta-kasus-heading">
       <header className="flex flex-wrap items-center gap-2 border-b border-rule px-3 py-2">
-        <h2 id="peta-kasus-heading" className="text-sm font-medium uppercase tracking-wide text-muted">
+        <h2 id="peta-kasus-heading" className="text-sm font-medium uppercase tracking-wide text-chalk-muted">
           Peta Kasus
         </h2>
-        <span className="text-xs text-muted">{nodeCount} entitas</span>
+        <span className="text-xs text-chalk-muted">{nodeCount} entitas</span>
         <div className="ml-auto flex flex-wrap items-center gap-1">
-          <span className="text-xs text-muted">Tingkat kepastian:</span>
+          <span className="text-xs text-chalk-muted">Tingkat kepastian:</span>
           {ALL_CERTAINTIES.map((c) => (
             <FilterChip
               key={c}
@@ -97,7 +97,7 @@ export function PetaKasus({
           ))}
         </div>
         <div className="flex flex-wrap items-center gap-1">
-          <span className="text-xs text-muted">Tipe simpul:</span>
+          <span className="text-xs text-chalk-muted">Tipe simpul:</span>
           {ALL_NODE_TYPES.map((t) => (
             <FilterChip
               key={t}
@@ -110,7 +110,7 @@ export function PetaKasus({
         {overThreshold ? (
           <button
             type="button"
-            className="rounded-md border border-rule px-2 py-0.5 text-xs text-muted hover:text-ink"
+            className="rounded-md border border-rule px-2 py-0.5 text-xs text-chalk-muted hover:text-chalk"
             onClick={() => setCollapsedClusters((v) => !v)}
             aria-pressed={collapsedClusters}
           >
@@ -120,13 +120,13 @@ export function PetaKasus({
       </header>
       <div className="relative flex-1">
         {graph.loading ? (
-          <p className="absolute inset-0 grid place-items-center text-sm text-muted">Memuat…</p>
+          <p className="absolute inset-0 grid place-items-center text-sm text-chalk-muted">Memuat…</p>
         ) : graph.error ? (
-          <p className="absolute inset-0 grid place-items-center text-sm text-muted">
+          <p className="absolute inset-0 grid place-items-center text-sm text-chalk-muted">
             Tidak dapat memuat peta: {graph.error}
           </p>
         ) : flowNodes.length === 0 ? (
-          <p className="absolute inset-0 grid place-items-center text-center text-sm text-muted">
+          <p className="absolute inset-0 grid place-items-center text-center text-sm text-chalk-muted">
             Belum ada simpul. Tarik sumber ke dossier kasus ini untuk mulai membangun peta.
           </p>
         ) : (
@@ -146,7 +146,7 @@ export function PetaKasus({
             attributionPosition="bottom-left"
             proOptions={{ hideAttribution: true }}
           >
-            <Background gap={24} size={1} color="#e5e7eb" />
+            <Background gap={24} size={1} color="#2D5040" />
             <Controls showInteractive={false} />
           </ReactFlow>
         )}
@@ -172,30 +172,21 @@ function buildLayout(nodes: readonly EntityDto[]): Map<string, { x: number; y: n
   return layout;
 }
 
-function nodeBg(entity: EntityDto): string {
-  switch (entity.type) {
-    case 'person':
-      return '#f5f5f4';
-    case 'institution':
-      return '#eef2ff';
-    case 'company':
-      return '#fdf6e3';
-    case 'document':
-      return '#ecfeff';
-  }
+function nodeBg(_entity: EntityDto): string {
+  return '#EDE8D0';
 }
 
 function edgeStroke(edge: RelationshipDto): string {
   switch (edge.certainty) {
     case 'established':
-      return '#1f4f3a';
+      return '#C0392B';
     case 'alleged':
-      return '#7a4f1a';
+      return '#D4A017';
     case 'reported':
-      return '#37526b';
+      return '#3498DB';
     case 'disputed':
-      return '#7a2f3a';
+      return '#8E44AD';
     case 'unverified':
-      return '#9ca3af';
+      return '#9DB89A';
   }
 }

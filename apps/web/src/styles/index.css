@@ -1,3 +1,9 @@
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/700.css';
+@import '@fontsource/ibm-plex-serif/400.css';
+@import '@fontsource/ibm-plex-serif/600.css';
+@import '@fontsource/special-elite/400.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,6 +16,8 @@
   }
 
   body {
+    background-color: theme('colors.board');
+    color: theme('colors.chalk');
     font-family: theme('fontFamily.sans');
   }
 

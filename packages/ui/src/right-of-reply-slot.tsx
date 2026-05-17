@@ -29,10 +29,10 @@ export function RightOfReplySlot({
 }: RightOfReplySlotProps): JSX.Element {
   return (
     <section
-      className="min-h-[5rem] rounded-md border border-rule bg-paper/60 p-3"
+      className="min-h-[5rem] rounded-md border border-rule bg-board/60 p-3"
       aria-label="Hak jawab"
     >
-      <h3 className="text-xs font-medium uppercase tracking-wide text-muted">Hak jawab</h3>
+      <h3 className="text-xs font-medium uppercase tracking-wide text-chalk-muted">Hak jawab</h3>
       {statement ? (
         <div className="mt-1.5">
           <div className="mb-1.5">
@@ -41,14 +41,14 @@ export function RightOfReplySlot({
               publisher={statement.publisher}
               onOpen={onSourceOpen}
             />
-            <span className="ml-2 text-xs text-muted">
+            <span className="ml-2 text-xs text-chalk-muted">
               {dateFmt.format(statement.publishedAt)}
             </span>
           </div>
-          <p className="prose-doc text-ink">{statement.text}</p>
+          <p className="prose-doc text-chalk">{statement.text}</p>
         </div>
       ) : (
-        <p className="mt-1.5 text-sm italic text-muted">
+        <p className="mt-1.5 text-sm italic text-chalk-muted">
           Belum ada tanggapan publik tercatat per {dateFmt.format(asOf)}.
         </p>
       )}

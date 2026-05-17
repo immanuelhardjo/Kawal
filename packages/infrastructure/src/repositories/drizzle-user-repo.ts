@@ -14,6 +14,13 @@ export class DrizzleUserRepo implements UserRepo {
     return row ? toUser(row) : null;
   }
 
+  async findByEmail(email: string): Promise<User | null> {
+    const row = await this.db.query.users.findFirst({
+      where: (u, { eq }) => eq(u.email, email),
+    });
+    return row ? toUser(row) : null;
+  }
+
   async findById(id: string): Promise<User | null> {
     const row = await this.db.query.users.findFirst({ where: (u, { eq }) => eq(u.id, id) });
     return row ? toUser(row) : null;
@@ -28,15 +35,18 @@ export class DrizzleUserRepo implements UserRepo {
         email: user.email,
         displayName: user.displayName,
         pictureUrl: user.pictureUrl,
+        passwordHash: user.passwordHash,
         createdAt: user.createdAt,
         lastSignedInAt: user.lastSignedInAt,
       })
       .onConflictDoUpdate({
         target: users.id,
         set: {
+          googleSub: user.googleSub,
           email: user.email,
           displayName: user.displayName,
           pictureUrl: user.pictureUrl,
+          passwordHash: user.passwordHash,
           lastSignedInAt: user.lastSignedInAt,
         },
       });
@@ -61,6 +71,7 @@ function toUser(row: typeof users.$inferSelect): User {
     email: row.email,
     displayName: row.displayName,
     pictureUrl: row.pictureUrl,
+    passwordHash: row.passwordHash,
     createdAt: row.createdAt,
     lastSignedInAt: row.lastSignedInAt,
   };
