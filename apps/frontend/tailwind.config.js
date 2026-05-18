@@ -18,6 +18,13 @@ export default {
         'stamp-reported': '#3498DB',
         'stamp-disputed': '#8E44AD',
         'stamp-unverified': '#95A5A6',
+        // Wood frame tokens — visual-identity spec
+        wood: '#8B5E15',
+        'wood-mid': '#C4922A',
+        'wood-light': '#E8B84B',
+        // Cork sidebar tokens — visual-identity spec
+        cork: '#C19A6B',
+        'cork-shadow': '#A07850',
       },
       fontFamily: {
         // Body font — IBM Plex Serif (default sans alias so existing font-sans usages work)

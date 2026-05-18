@@ -19,11 +19,118 @@
     background-color: theme('colors.board');
     color: theme('colors.chalk');
     font-family: theme('fontFamily.sans');
+    /*
+     * Chalk powder diffusion on body text — three-layer glow simulates chalk
+     * dust spreading from the stroke into the board surface.
+     * Inner layer (3px, 35%): tight luminous core around each letterform.
+     * Mid layer (10px, 12%): chalk dust halo.
+     * Outer layer (22px, 4%): faint atmospheric scatter.
+     */
+    text-shadow:
+      0 0 3px rgba(240, 235, 216, 0.35),
+      0 0 10px rgba(240, 235, 216, 0.12),
+      0 0 22px rgba(240, 235, 216, 0.04);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /*
+   * Chalk headline styling — applied to all elements using the font-headline
+   * Tailwind utility (Playfair Display). Combines:
+   *   - chalk-edge SVG filter: low-freq fractalNoise displacement (1.5px) that
+   *     gives letterforms a slightly uneven hand-drawn edge.
+   *   - Stronger three-layer glow: chalk marks glow brighter at large sizes.
+   *   - Tiny letter-spacing increase: chalk strokes never sit perfectly tight.
+   *
+   * Disabled under prefers-reduced-motion (filter causes layout shift on some
+   * accessibility setups).
+   */
+  .font-headline {
+    filter: url(#chalk-edge);
+    text-shadow:
+      0 0 2px rgba(240, 235, 216, 0.65),
+      0 0 7px rgba(240, 235, 216, 0.3),
+      0 0 18px rgba(240, 235, 216, 0.1);
+    letter-spacing: 0.02em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .font-headline {
+      filter: none;
+    }
+  }
+
+  /*
+   * Chalk muted text — secondary text on board surfaces gets a very faint glow
+   * in its own chalk-green colour so it reads as faded chalk rather than grey UI.
+   */
+  .text-chalk-muted {
+    text-shadow: 0 0 6px rgba(157, 184, 154, 0.25);
+  }
+
+  /*
+   * Board grain — spec: board-texture "Board grain overlay"
+   * Fixed SVG feTurbulence noise at 3.5% opacity. pointer-events:none so it
+   * never intercepts clicks. z-index 20 keeps it above page content but below
+   * modals (z-30/z-40).
+   */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  /*
+   * Board vignette — spec: board-texture "Board edge vignette"
+   * Radial gradient darkening edges ~28% to simulate mounted board.
+   * z-index 19 sits just below the grain layer.
+   */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.28) 100%);
+    pointer-events: none;
+    z-index: 19;
   }
 
   /* Document-like reading column for long-form content. */
   .prose-doc {
     max-width: 64ch;
     line-height: 1.6;
+  }
+}
+
+@layer components {
+  /*
+   * Wood frame — spec: board-frame "Wood frame border around the app viewport"
+   * border-image gradient simulates walnut grain. Box-shadow provides inner
+   * depth (board recessed in frame) and outer mount shadow.
+   * Square corners by design — physical chalkboard frames are not rounded.
+   *
+   * z-index ladder summary:
+   *   19  vignette overlay (body::after)
+   *   20  grain overlay (body::before)
+   *   30  Profil, SourcePanel panels
+   *   40  GlosariumOverlay
+   */
+  .wood-frame {
+    border: 18px solid transparent;
+    border-image: linear-gradient(
+        145deg,
+        #8b5e15 0%,
+        #c4922a 18%,
+        #a07020 35%,
+        #7a4e10 50%,
+        #b8801c 65%,
+        #9a6814 82%,
+        #8b5e15 100%
+      )
+      1;
+    box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.6), 0 0 28px rgba(0, 0, 0, 0.5);
   }
 }

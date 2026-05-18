@@ -1,6 +1,7 @@
 import type { RelationshipDto } from '@kawal/contracts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { pushCaseHistory } from '../../lib/case-history.js';
 import { KasusDetailProvider, useKasusDetail } from './context.js';
 import { Dosier } from './dosier.js';
 import { GarisWaktu } from './garis-waktu.js';
@@ -43,6 +44,12 @@ function KasusDetailLayout(): JSX.Element {
   const [glossaryTerm, setGlossaryTerm] = useState<string | null>(null);
   const [refreshTick, setRefreshTick] = useState(0); // bump to force-refetch
   void refreshTick;
+
+  useEffect(() => {
+    if (caseQ.data) {
+      pushCaseHistory({ id: caseId, name: caseQ.data.name });
+    }
+  }, [caseId, caseQ.data]);
 
   return (
     <div className="flex h-screen flex-col bg-board">

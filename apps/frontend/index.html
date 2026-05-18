@@ -7,6 +7,36 @@
     <title>Kawal</title>
   </head>
   <body class="bg-board text-chalk antialiased">
+    <!--
+      Hidden SVG filter defs — chalk edge roughness applied to headings.
+      Placing here (before #root) ensures the filter is in the document before
+      any React-rendered element tries to reference it via filter:url(#...).
+    -->
+    <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+      <defs>
+        <!--
+          chalk-edge: low-frequency fractalNoise displacement gives heading
+          letterforms a slightly uneven, hand-drawn chalk edge.
+          scale=1.5px — perceptible roughness without blurring legibility.
+        -->
+        <filter id="chalk-edge" x="-4%" y="-10%" width="108%" height="120%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.025"
+            numOctaves="3"
+            seed="5"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="1.5"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
