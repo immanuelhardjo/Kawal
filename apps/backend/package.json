@@ -1,5 +1,5 @@
 {
-  "name": "@kawal/api",
+  "name": "@kawal/backend",
   "version": "0.0.1",
   "private": true,
   "type": "module",

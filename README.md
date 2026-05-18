@@ -18,14 +18,14 @@ Authoritative product spec lives under [`openspec/`](./openspec/). The active ch
 
 ```
 apps/
-  web/                    React + Vite, the only frontend deliverable
-  api/                    Express HTTP entrypoint, the only backend deliverable
+  frontend/               React + Vite, the only frontend deliverable
+  backend/                Express HTTP entrypoint, the only backend deliverable
 packages/
   domain/                 Pure-TS aggregates, value objects, invariants
   application/            Use cases + ports
   infrastructure/         Drizzle repos, Google OIDC, Gemini adapter, source adapters
   ui/                     React primitives that enforce certainty/source rules
-  contracts/              Zod schemas shared between apps/api and apps/web
+  contracts/              Zod schemas shared between apps/backend and apps/frontend
 tools/
   eslint-plugin-kawal/    Custom lint rules (no-raw-fact-render, no-editorial-tone, no-bahasa-in-identifiers)
 openspec/                 Spec-driven workflow artifacts
@@ -43,8 +43,8 @@ openspec/                 Spec-driven workflow artifacts
 
 ```sh
 pnpm install
-cp apps/api/.env.example apps/api/.env       # then fill in
-cp apps/web/.env.example apps/web/.env
+cp apps/backend/.env.example apps/backend/.env       # then fill in
+cp apps/frontend/.env.example apps/frontend/.env
 pnpm db:migrate
 pnpm dev                                      # api on :3000, web on :5173
 ```

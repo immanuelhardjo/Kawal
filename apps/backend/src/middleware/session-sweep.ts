@@ -28,10 +28,10 @@ export function sessionSweepMiddleware(
     const cutoff = new Date(now - inactivityMs);
     composition.sessions
       .sweepExpired(cutoff)
-      .then((removed) => {
+      .then((removed: number) => {
         if (removed > 0) logger.info({ removed }, 'sessions_sweep');
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         logger.warn({ err }, 'sessions_sweep_failed');
       })
       .finally(() => {

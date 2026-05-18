@@ -24,11 +24,11 @@ KAWAL is an OSINT investigation workbench — investigators assemble dossiers, t
 
 ## Impact
 
-- `apps/web/tailwind.config.js` — full token rename and value replacement
-- `apps/web/src/styles/index.css` — Fontsource imports, dark-green body, new utility classes
-- `apps/web/index.html` — remove any CDN font links if present
+- `apps/frontend/tailwind.config.js` — full token rename and value replacement
+- `apps/frontend/src/styles/index.css` — Fontsource imports, dark-green body, new utility classes
+- `apps/frontend/index.html` — remove any CDN font links if present
 - `packages/ui/src/certainty-chip.tsx` — stamp-style redesign of chip component
-- `apps/web/src/screens/**/*.tsx` (~15 files) — class token rename (`bg-paper` → `bg-board` etc.)
-- `apps/web/src/screens/kasus-detail/peta-kasus.tsx` — node/edge/background colour update
+- `apps/frontend/src/screens/**/*.tsx` (~15 files) — class token rename (`bg-paper` → `bg-board` etc.)
+- `apps/frontend/src/screens/kasus-detail/peta-kasus.tsx` — node/edge/background colour update
 - `package.json` / `pnpm-lock.yaml` — add `@fontsource/special-elite`, `@fontsource/playfair-display`, `@fontsource/ibm-plex-serif`
 - No API changes; no database changes; no breaking contract changes.

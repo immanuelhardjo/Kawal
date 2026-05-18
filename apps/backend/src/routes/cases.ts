@@ -1,4 +1,4 @@
-import { NotFound } from '@kawal/application';
+import { NotFound, type CaseRevisionPayload } from '@kawal/application';
 import {
   advanceLifecycleRequestSchema,
   caseDtoSchema,
@@ -10,7 +10,7 @@ import {
   type ListCasesResponse,
   type WhatChangedResponse,
 } from '@kawal/contracts';
-import type { Case } from '@kawal/domain';
+import type { Case, Revision } from '@kawal/domain';
 import { Router } from 'express';
 import { z } from 'zod';
 import type { Composition } from '../composition.js';
@@ -138,7 +138,7 @@ export function caseRoutes(composition: Composition): Router {
       const revisions = await composition.cases.listRevisionsForOwner(caseId, req.user!.id);
       res.json({
         caseId,
-        revisions: revisions.map((r) => ({
+        revisions: revisions.map((r: Revision<CaseRevisionPayload>) => ({
           revisionNo: r.revisionNo,
           validFrom: r.validFrom.toISOString(),
           validTo: r.validTo?.toISOString() ?? null,

@@ -2,7 +2,7 @@
 
 ### Requirement: Normative colour token system
 
-The system SHALL define and use a fixed set of semantic colour tokens implemented in `apps/web/tailwind.config.js`. No component SHALL use raw hex colour values in Tailwind class strings; hex values are permitted only in ReactFlow inline style objects (see ReactFlow node/edge colouring requirement).
+The system SHALL define and use a fixed set of semantic colour tokens implemented in `apps/frontend/tailwind.config.js`. No component SHALL use raw hex colour values in Tailwind class strings; hex values are permitted only in ReactFlow inline style objects (see ReactFlow node/edge colouring requirement).
 
 The canonical token values are:
 
@@ -24,12 +24,12 @@ The canonical token values are:
 
 #### Scenario: Token usage in components
 
-- **WHEN** any Tailwind class string in `apps/web/src` or `packages/ui/src` is inspected
+- **WHEN** any Tailwind class string in `apps/frontend/src` or `packages/ui/src` is inspected
 - **THEN** colour utilities reference only the tokens above (e.g., `bg-board`, `text-chalk`, `border-rule`) and no raw hex or arbitrary-value colour classes (e.g., `bg-[#1F3529]`) are present
 
 #### Scenario: Token definition location
 
-- **WHEN** the `tailwind.config.js` file in `apps/web` is read
+- **WHEN** the `tailwind.config.js` file in `apps/frontend` is read
 - **THEN** all tokens from the table above are present under `theme.extend.colors` with the exact hex values specified
 
 ### Requirement: Normative typography stack

@@ -1,6 +1,6 @@
 ## Context
 
-The current KAWAL web app uses Tailwind CSS with a custom token set (`paper`, `ink`, `muted`, `rule`, `accent`) defined in `apps/web/tailwind.config.js`. The font stack is Inter (sans) and Source Serif Pro (serif), loaded via Google Fonts CDN in `index.html`. All component classes in `apps/web/src/screens/**` and `packages/ui/src` reference these tokens directly.
+The current KAWAL web app uses Tailwind CSS with a custom token set (`paper`, `ink`, `muted`, `rule`, `accent`) defined in `apps/frontend/tailwind.config.js`. The font stack is Inter (sans) and Source Serif Pro (serif), loaded via Google Fonts CDN in `index.html`. All component classes in `apps/frontend/src/screens/**` and `packages/ui/src` reference these tokens directly.
 
 The `CertaintyChip` component in `packages/ui` renders translucent pill badges using `bg-certainty-*/10` opacity utilities. The ReactFlow canvas in `peta-kasus.tsx` uses hardcoded hex values for node backgrounds and edge strokes.
 
@@ -59,7 +59,7 @@ stamp-unverified  #95A5A6   ← grey (belum terverifikasi)
 
 ### D2 — Font loading via Fontsource (no CDN)
 
-**Decision**: Install `@fontsource/special-elite`, `@fontsource/playfair-display`, and `@fontsource/ibm-plex-serif` as npm packages; import them in `apps/web/src/styles/index.css`.
+**Decision**: Install `@fontsource/special-elite`, `@fontsource/playfair-display`, and `@fontsource/ibm-plex-serif` as npm packages; import them in `apps/frontend/src/styles/index.css`.
 
 **Rationale**: Fontsource bundles fonts as self-hosted static assets bundled by Vite. No external DNS lookup, no privacy risk, works offline, and eliminates the CDN link in `index.html`. Build output increases by ~200 KB (woff2 subsets), which is acceptable.
 
@@ -113,8 +113,8 @@ font-mono      → Special Elite (IDs, timestamps, source snippets, code)
 
 1. Install Fontsource packages.
 2. Update `tailwind.config.js` with new tokens and font stacks.
-3. Update `apps/web/src/styles/index.css` with Fontsource imports and dark-green body.
-4. Rename token classes across `apps/web/src/screens/**` and `packages/ui/src` (mechanical find-and-replace).
+3. Update `apps/frontend/src/styles/index.css` with Fontsource imports and dark-green body.
+4. Rename token classes across `apps/frontend/src/screens/**` and `packages/ui/src` (mechanical find-and-replace).
 5. Redesign `CertaintyChip` in `packages/ui/src/certainty-chip.tsx`.
 6. Update `peta-kasus.tsx` node/edge/background colours.
 7. Smoke-test all screens; verify WCAG contrast on chalk-muted.

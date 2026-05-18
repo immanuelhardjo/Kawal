@@ -6,7 +6,7 @@ The system's visual identity (colour palette, typography stack, and certainty-st
 
 #### Scenario: Colour deviation rejected
 
-- **WHEN** a pull request introduces a Tailwind class using a raw hex arbitrary value for colour (e.g., `bg-[#aabbcc]`) in any component under `apps/web/src` or `packages/ui/src`
+- **WHEN** a pull request introduces a Tailwind class using a raw hex arbitrary value for colour (e.g., `bg-[#aabbcc]`) in any component under `apps/frontend/src` or `packages/ui/src`
 - **THEN** the CI lint rule flags the usage and the build fails
 
 #### Scenario: Font deviation rejected
