@@ -90,6 +90,14 @@ export class DrizzleSourceRepo implements SourceRepo {
     });
   }
 
+  async listByIdsForOwner(ids: readonly string[], ownerUserId: string): Promise<Source[]> {
+    if (ids.length === 0) return [];
+    const rows = await this.db.query.sources.findMany({
+      where: (s, { and, eq, inArray }) => and(eq(s.ownerUserId, ownerUserId), inArray(s.id, [...ids])),
+    });
+    return rows.map(toSource);
+  }
+
   async tombstone(input: { id: string; actorUserId: string; now: Date }): Promise<void> {
     await this.db.transaction(async (tx) => {
       const row = await tx.query.sources.findFirst({

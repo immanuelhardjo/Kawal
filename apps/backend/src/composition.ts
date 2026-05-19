@@ -8,9 +8,9 @@ import {
   ExportMyDossier,
   GenerateBriefing,
   GenerateScenarios,
+  GetConversationHistory,
   GetTimeline,
   GetVisibleGraph,
-  IngestSource,
   LabelClusters,
   ScanGlossaryBacklog,
   SignInWithGoogle,
@@ -21,7 +21,6 @@ import {
   VerifyClaim,
   type ClusterLabelPort,
   type ConversationPort,
-  type ExtractionPort,
   type GlossaryPort,
   type IdentityProviderPort,
   type ScenarioPort,
@@ -32,9 +31,9 @@ import {
   DrizzleAuditLogRepo,
   DrizzleCaseRepo,
   DrizzleClaimRepo,
+  DrizzleConversationHistoryRepo,
   DrizzleEntityRepo,
   DrizzleEventRepo,
-  DrizzleIngestActivityRepo,
   DrizzleRelationshipRepo,
   DrizzleSessionStore,
   DrizzleSourceRepo,
@@ -42,11 +41,8 @@ import {
   DrizzleUserRepo,
   GeminiAdapter,
   GoogleOidcAdapter,
-  HttpSourceFetcher,
-  InProcessRateLimiter,
   StubImageCardAdapter,
   StubNotebookLMAdapter,
-  WaybackArchiveAdapter,
   createDb,
 } from '@kawal/infrastructure';
 import type { Env } from './env.js';
@@ -64,14 +60,10 @@ export interface Composition {
   readonly claims: DrizzleClaimRepo;
   readonly events: DrizzleEventRepo;
   readonly relationships: DrizzleRelationshipRepo;
-  readonly ingestActivity: DrizzleIngestActivityRepo;
   readonly audit: DrizzleAuditLogRepo;
   readonly gemini: GeminiAdapter | null;
   readonly notebookLm: StubNotebookLMAdapter;
   readonly cards: StubImageCardAdapter;
-  readonly fetcher: HttpSourceFetcher;
-  readonly rateLimiter: InProcessRateLimiter;
-  readonly archive: WaybackArchiveAdapter;
 
   readonly signInWithGoogle: SignInWithGoogle;
   readonly signInWithPassword: SignInWithPassword;
@@ -83,11 +75,12 @@ export interface Composition {
   readonly advanceLifecycle: AdvanceLifecycle;
   readonly subscribeToCase: SubscribeToCase;
   readonly computeWhatChanged: ComputeWhatChanged;
-  readonly ingestSource: IngestSource;
   readonly getTimeline: GetTimeline;
   readonly getVisibleGraph: GetVisibleGraph;
+  readonly conversationHistory: DrizzleConversationHistoryRepo;
   readonly verifyClaim: VerifyClaim;
   readonly askQuestion: AskQuestion;
+  readonly getConversationHistory: GetConversationHistory;
   readonly generateBriefing: GenerateBriefing;
   readonly generateScenarios: GenerateScenarios;
   readonly labelClusters: LabelClusters;
@@ -110,9 +103,6 @@ const noopIdp: IdentityProviderPort = {
   },
 };
 
-const noopExtraction: ExtractionPort = {
-  extract: async () => [],
-};
 const noopVerification: VerificationPort = {
   verify: async () => ({
     certainty: 'unverified',
@@ -173,7 +163,7 @@ export function compose(env: Env): CompositionWithClose {
   const claims = new DrizzleClaimRepo(db);
   const events = new DrizzleEventRepo(db);
   const relationships = new DrizzleRelationshipRepo(db);
-  const ingestActivity = new DrizzleIngestActivityRepo(db);
+  const conversationHistory = new DrizzleConversationHistoryRepo(db);
 
   const idp =
     env.GOOGLE_OAUTH_CLIENT_ID && env.GOOGLE_OAUTH_CLIENT_SECRET && env.GOOGLE_OAUTH_REDIRECT_URI
@@ -187,11 +177,7 @@ export function compose(env: Env): CompositionWithClose {
   const gemini = env.GEMINI_API_KEY ? new GeminiAdapter(env.GEMINI_API_KEY) : null;
   const notebookLm = new StubNotebookLMAdapter();
   const cards = new StubImageCardAdapter();
-  const fetcher = new HttpSourceFetcher();
-  const rateLimiter = new InProcessRateLimiter(env.INGEST_RATE_PER_PUBLISHER_PER_SECOND);
-  const archive = new WaybackArchiveAdapter();
 
-  const extraction: ExtractionPort = gemini ?? noopExtraction;
   const verifier: VerificationPort = gemini ?? noopVerification;
   const conversation: ConversationPort = gemini ?? noopConversation;
   const scenarios: ScenarioPort = gemini ?? noopScenarios;
@@ -212,14 +198,11 @@ export function compose(env: Env): CompositionWithClose {
     claims,
     events,
     relationships,
-    ingestActivity,
     audit,
+    conversationHistory,
     gemini,
     notebookLm,
     cards,
-    fetcher,
-    rateLimiter,
-    archive,
 
     signInWithGoogle: new SignInWithGoogle({ idp: idp ?? noopIdp, users, sessions, audit, newId, now }),
     signInWithPassword: new SignInWithPassword({ users, sessions, audit, passwordHash: new Argon2Adapter(), newId, now }),
@@ -232,29 +215,13 @@ export function compose(env: Env): CompositionWithClose {
     subscribeToCase: new SubscribeToCase({ cases, subscriptions, newId, now }),
     computeWhatChanged: new ComputeWhatChanged({ cases, subscriptions, events }),
     verifyClaim: new VerifyClaim({ cases, verifier }),
-    askQuestion: new AskQuestion({ cases, conversation }),
+    askQuestion: new AskQuestion({ cases, conversation, conversationHistory, newId }),
+    getConversationHistory: new GetConversationHistory({ cases, conversationHistory }),
     generateBriefing: new GenerateBriefing({ cases, briefer: notebookLm }),
     generateScenarios: new GenerateScenarios({ cases, scenarios }),
     labelClusters: new LabelClusters({ cases, clusterLabeler }),
     explainTerm: new ExplainTerm({ cases, glossary }),
     scanGlossaryBacklog: new ScanGlossaryBacklog(),
-    ingestSource: new IngestSource({
-      cases,
-      sources,
-      entities,
-      claims,
-      events,
-      relationships,
-      activity: ingestActivity,
-      fetcher,
-      archive,
-      rateLimiter,
-      extraction,
-      newId,
-      now,
-      requestCeilingMs: env.INGEST_REQUEST_CEILING_MS,
-      excerptMaxChars: env.INGEST_EXCERPT_MAX_CHARS,
-    }),
     getTimeline: new GetTimeline({ cases, events }),
     getVisibleGraph: new GetVisibleGraph({ cases, entities, relationships }),
     close,

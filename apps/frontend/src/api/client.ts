@@ -1,16 +1,18 @@
 import type {
   AggregateTypeDto,
+  AskQuestionResponse,
   CaseDto,
   CertaintyLabel,
+  ConversationHistoryResponse,
   CreateCaseRequest,
   EntityDto,
   EntityTypeDto,
   EventTypeDto,
   GetTimelineResponse,
-  IngestActivityResponse,
   ListCasesResponse,
   ListEntitiesResponse,
   ListRevisionsResponse,
+  ListSourcesResponse,
   MeResponse,
   VisibleGraphResponse,
   WhatChangedResponse,
@@ -116,9 +118,19 @@ export const api = {
       `/revisions/${encodeURIComponent(aggregateType)}/${encodeURIComponent(id)}`,
     ),
 
-  // --- ingest
-  ingestStreamUrl: `${env.VITE_API_BASE_URL}/ingest`,
-  ingestActivity: () => request<IngestActivityResponse>('/ingest/activity'),
+  // --- sources
+  listCaseSources: (caseId: string) =>
+    request<ListSourcesResponse>(`/cases/${encodeURIComponent(caseId)}/sources`),
+
+  // --- ai / conversation
+  getConversationHistory: (caseId: string) =>
+    request<ConversationHistoryResponse>(`/ai/conversation-history${buildQuery({ caseId })}`),
+  askQuestion: (caseId: string, question: string) =>
+    request<AskQuestionResponse>('/ai/ask', {
+      method: 'POST',
+      body: JSON.stringify({ caseId, question }),
+    }),
+
 };
 
 export { ApiError };

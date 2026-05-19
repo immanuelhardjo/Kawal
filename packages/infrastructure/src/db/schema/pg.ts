@@ -423,6 +423,30 @@ export const ingestActivity = pgTable(
   }),
 );
 
+// ---------- conversation messages ----------
+export const conversationMessages = pgTable(
+  'conversation_messages',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    caseId: text('case_id')
+      .notNull()
+      .references(() => cases.id, { onDelete: 'cascade' }),
+    question: text('question').notNull(),
+    answerText: text('answer_text').notNull(),
+    citedClaimIds: jsonb('cited_claim_ids').$type<string[]>().notNull().default([]),
+    citedEventIds: jsonb('cited_event_ids').$type<string[]>().notNull().default([]),
+    citedSourceIds: jsonb('cited_source_ids').$type<string[]>().notNull().default([]),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull(),
+  },
+  (t) => ({
+    userCaseIdx: index('conv_msgs_user_case_idx').on(t.userId, t.caseId),
+    createdAtIdx: index('conv_msgs_created_at_idx').on(t.createdAt),
+  }),
+);
+
 // ---------- audit log ----------
 export const auditLog = pgTable(
   'audit_log',

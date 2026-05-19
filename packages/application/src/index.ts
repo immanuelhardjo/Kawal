@@ -37,6 +37,10 @@ export type {
   VerificationPort,
 } from './ports/ai-ports.js';
 export type {
+  ConversationHistoryRepo,
+  ConversationMessage,
+} from './ports/conversation-history-port.js';
+export type {
   ArchivePort,
   FetchOutcome,
   RateLimiterPort,
@@ -116,6 +120,7 @@ export { GenerateBriefing, type GenerateBriefingDeps } from './use-cases/generat
 export { GenerateScenarios, type GenerateScenariosDeps } from './use-cases/generate-scenarios.js';
 export { LabelClusters, type LabelClustersDeps } from './use-cases/label-clusters.js';
 export { ExplainTerm, type ExplainTermDeps } from './use-cases/explain-term.js';
+export { GetConversationHistory, type GetConversationHistoryDeps } from './use-cases/get-conversation-history.js';
 export {
   ScanGlossaryBacklog,
   type GlossaryBacklogEntry,

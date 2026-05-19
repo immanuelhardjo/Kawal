@@ -70,11 +70,8 @@ export function KasusDetailProvider({ caseId, children }: KasusDetailProviderPro
   const [nodeTypes, setNodeTypes] = useState<readonly EntityTypeDto[]>([]);
   const [entityIds, setEntityIds] = useState<readonly string[]>([]);
 
-  // Tapping a node sets the entity filter to that entity. Tapping background
-  // (selectEntity(null)) clears the filter.
   const selectEntity = useCallback((id: string | null) => {
     setSelectedEntityId(id);
-    setEntityIds(id ? [id] : []);
   }, []);
 
   // Tapping an event also sets the asOfDate to that event's date in the

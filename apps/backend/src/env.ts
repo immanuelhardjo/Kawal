@@ -25,10 +25,6 @@ const envSchema = z.object({
 
   GEMINI_API_KEY: optionalStr,
 
-  INGEST_REQUEST_CEILING_MS: z.coerce.number().int().positive().default(120_000),
-  INGEST_RATE_PER_PUBLISHER_PER_SECOND: z.coerce.number().positive().default(1),
-  INGEST_EXCERPT_MAX_CHARS: z.coerce.number().int().positive().default(500),
-
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
 });
 

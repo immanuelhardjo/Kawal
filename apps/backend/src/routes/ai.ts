@@ -144,6 +144,20 @@ export function aiRoutes(composition: Composition): Router {
     }
   });
 
+  const historyQuery = z.object({ caseId: z.string().min(1) });
+  router.get('/conversation-history', async (req, res, next) => {
+    try {
+      const { caseId } = historyQuery.parse(req.query);
+      const messages = await composition.getConversationHistory.execute({
+        userId: req.user!.id,
+        caseId,
+      });
+      res.json({ messages });
+    } catch (err) {
+      next(err);
+    }
+  });
+
   router.post('/scan-glossary-backlog', async (req, res, next) => {
     try {
       const entries = await composition.scanGlossaryBacklog.execute({ userId: req.user!.id });

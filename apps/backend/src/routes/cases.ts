@@ -152,5 +152,33 @@ export function caseRoutes(composition: Composition): Router {
     }
   });
 
+  router.get('/:caseId/sources', async (req, res, next) => {
+    try {
+      const caseId = z.string().min(1).parse(req.params.caseId);
+      const userId = req.user!.id;
+      const owned = await composition.cases.findByIdForOwner(caseId, userId);
+      if (!owned) { res.status(404).json({ code: 'not_found', message: `Case ${caseId} not found` }); return; }
+      const [evts, rels] = await Promise.all([
+        composition.events.listForCase(caseId, userId),
+        composition.relationships.listForCase(caseId, userId),
+      ]);
+      const ids = [...new Set([...evts.flatMap((e) => [...e.sourceIds]), ...rels.flatMap((r) => [...r.sourceIds])])];
+      const srcs = await composition.sources.listByIdsForOwner(ids, userId);
+      res.json({
+        sources: srcs.map((s) => ({
+          id: s.id,
+          url: s.url,
+          publisher: s.publisher,
+          tier: s.tier,
+          fetchedAt: s.fetchedAt.toISOString(),
+          excerpt: s.excerpt.value,
+          archiveUrl: s.archiveUrl,
+        })),
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
+
   return router;
 }

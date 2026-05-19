@@ -1,10 +1,12 @@
 import type {
   CaseDto,
+  ConversationMessageDto,
   EntityDto,
   GetTimelineResponse,
+  ListSourcesResponse,
   VisibleGraphResponse,
 } from '@kawal/contracts';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../../api/client.js';
 import { useKasusDetail } from './context.js';
 
@@ -99,6 +101,115 @@ export function useVisibleGraph(): AsyncState<VisibleGraphResponse> {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [caseId, asOfKey, filterKey]);
+  return state;
+}
+
+export interface ChatMessage {
+  readonly id: string;
+  readonly question: string;
+  readonly answerText: string;
+  readonly citedClaimIds: readonly string[];
+  readonly citedEventIds: readonly string[];
+  readonly citedSourceIds: readonly string[];
+  readonly createdAt: string;
+  readonly pending?: boolean;
+}
+
+export function useConversationHistory(caseId: string): {
+  messages: ChatMessage[];
+  loading: boolean;
+  sendQuestion: (question: string) => Promise<void>;
+  sending: boolean;
+} {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
+  const pendingIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    api
+      .getConversationHistory(caseId)
+      .then((res) => {
+        if (cancelled) return;
+        setMessages(
+          res.messages.map((m: ConversationMessageDto) => ({
+            id: m.id,
+            question: m.question,
+            answerText: m.answerText,
+            citedClaimIds: m.citedClaimIds,
+            citedEventIds: m.citedEventIds,
+            citedSourceIds: m.citedSourceIds,
+            createdAt: m.createdAt,
+          })),
+        );
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [caseId]);
+
+  const sendQuestion = useCallback(
+    async (question: string) => {
+      const tempId = `pending-${Date.now()}`;
+      pendingIdRef.current = tempId;
+      const optimistic: ChatMessage = {
+        id: tempId,
+        question,
+        answerText: '',
+        citedClaimIds: [],
+        citedEventIds: [],
+        citedSourceIds: [],
+        createdAt: new Date().toISOString(),
+        pending: true,
+      };
+      setMessages((prev) => [...prev, optimistic]);
+      setSending(true);
+      try {
+        const answer = await api.askQuestion(caseId, question);
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === tempId
+              ? {
+                  id: tempId,
+                  question,
+                  answerText: answer.textBahasa,
+                  citedClaimIds: answer.citedClaimIds,
+                  citedEventIds: answer.citedEventIds,
+                  citedSourceIds: answer.citedSourceIds,
+                  createdAt: new Date().toISOString(),
+                  pending: false,
+                }
+              : m,
+          ),
+        );
+      } catch {
+        setMessages((prev) => prev.filter((m) => m.id !== tempId));
+      } finally {
+        setSending(false);
+        pendingIdRef.current = null;
+      }
+    },
+    [caseId],
+  );
+
+  return { messages, loading, sendQuestion, sending };
+}
+
+export function useCaseSources(caseId: string): AsyncState<ListSourcesResponse> {
+  const [state, setState] = useState<AsyncState<ListSourcesResponse>>(initialState);
+  useEffect(() => {
+    let cancelled = false;
+    setState(initialState);
+    api
+      .listCaseSources(caseId)
+      .then((data) => !cancelled && setState({ data, loading: false, error: null }))
+      .catch((err) => !cancelled && setState({ data: null, loading: false, error: messageFrom(err) }));
+    return () => { cancelled = true; };
+  }, [caseId]);
   return state;
 }
 

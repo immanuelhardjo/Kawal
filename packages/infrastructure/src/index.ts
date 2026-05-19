@@ -14,6 +14,7 @@ export { DrizzleClaimRepo } from './repositories/drizzle-claim-repo.js';
 export { DrizzleEventRepo } from './repositories/drizzle-event-repo.js';
 export { DrizzleRelationshipRepo } from './repositories/drizzle-relationship-repo.js';
 export { DrizzleIngestActivityRepo } from './repositories/drizzle-ingest-activity-repo.js';
+export { DrizzleConversationHistoryRepo } from './repositories/drizzle-conversation-history-repo.js';
 
 // Identity
 export { GoogleOidcAdapter, type GoogleOidcConfig } from './identity/google-oidc-adapter.js';

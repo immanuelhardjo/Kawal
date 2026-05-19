@@ -481,61 +481,67 @@ async function main(): Promise<void> {
 
   // ---- 7. Claims ----
 
-  await seedClaim('seed_clm_suap', uid, caseId,
-    'Dr. Bambang Prasetyo diduga menerima gratifikasi senilai Rp 4,5 miliar dari PT Medika Sejahtera Utama sebagai imbalan penetapan pemenang tender pengadaan alat PCR RSUD Kabupaten Tambora tahun 2022.',
-    'alleged', [srcKpk.id, srcTempo.id], []);
+  await seedClaim({ id: 'seed_clm_suap', uid, caseId, certainty: 'alleged',
+    text: 'Dr. Bambang Prasetyo diduga menerima gratifikasi senilai Rp 4,5 miliar dari PT Medika Sejahtera Utama sebagai imbalan penetapan pemenang tender pengadaan alat PCR RSUD Kabupaten Tambora tahun 2022.',
+    sourceIds: [srcKpk.id, srcTempo.id], contradictedByClaimIds: [] });
   console.log('  ✓ seed_clm_suap');
 
-  await seedClaim('seed_clm_markup', uid, caseId,
-    'Harga pengadaan alat PCR dicatatkan Rp 12,8 miliar dalam dokumen kontrak, sedangkan harga pasar wajar pada periode yang sama adalah Rp 3,1 miliar — setara markup 313 persen di atas nilai pasar.',
-    'established', [srcTempo.id, srcIcw.id], []);
+  await seedClaim({ id: 'seed_clm_markup', uid, caseId, certainty: 'established',
+    text: 'Harga pengadaan alat PCR dicatatkan Rp 12,8 miliar dalam dokumen kontrak, sedangkan harga pasar wajar pada periode yang sama adalah Rp 3,1 miliar — setara markup 313 persen di atas nilai pasar.',
+    sourceIds: [srcTempo.id, srcIcw.id], contradictedByClaimIds: [] });
   console.log('  ✓ seed_clm_markup');
 
-  await seedClaim('seed_clm_izin', uid, caseId,
-    'PT Medika Sejahtera Utama tidak memiliki izin distributor alat kesehatan yang valid dari Kementerian Kesehatan pada saat kontrak pengadaan ditandatangani pada Juni 2022.',
-    'established', [srcKpk.id], []);
+  await seedClaim({ id: 'seed_clm_izin', uid, caseId, certainty: 'established',
+    text: 'PT Medika Sejahtera Utama tidak memiliki izin distributor alat kesehatan yang valid dari Kementerian Kesehatan pada saat kontrak pengadaan ditandatangani pada Juni 2022.',
+    sourceIds: [srcKpk.id], contradictedByClaimIds: [] });
   console.log('  ✓ seed_clm_izin');
 
-  await seedClaim('seed_clm_siti_alibi', uid, caseId,
-    'Siti Rahayu dalam keterangan persidangan menyatakan bahwa seluruh keputusan teknis pengadaan dibuat atas instruksi langsung Dr. Bambang Prasetyo dan ia tidak memiliki kewenangan untuk menolak perintah atasan.',
-    'alleged', [srcDetik.id], ['seed_clm_suap']);
+  await seedClaim({ id: 'seed_clm_siti_alibi', uid, caseId, certainty: 'alleged',
+    text: 'Siti Rahayu dalam keterangan persidangan menyatakan bahwa seluruh keputusan teknis pengadaan dibuat atas instruksi langsung Dr. Bambang Prasetyo dan ia tidak memiliki kewenangan untuk menolak perintah atasan.',
+    sourceIds: [srcDetik.id], contradictedByClaimIds: ['seed_clm_suap'] });
   console.log('  ✓ seed_clm_siti_alibi');
 
-  await seedClaim('seed_clm_rekening', uid, caseId,
-    'Berdasarkan laporan analisis keuangan ICW, aliran dana kickback mengalir ke rekening atas nama Ny. Dewi Lestari (istri terdakwa Bambang Prasetyo) melalui dua perusahaan cangkang yang terafiliasi dengan Hartono Wibisono.',
-    'reported', [srcIcw.id], []);
+  await seedClaim({ id: 'seed_clm_rekening', uid, caseId, certainty: 'reported',
+    text: 'Berdasarkan laporan analisis keuangan ICW, aliran dana kickback mengalir ke rekening atas nama Ny. Dewi Lestari (istri terdakwa Bambang Prasetyo) melalui dua perusahaan cangkang yang terafiliasi dengan Hartono Wibisono.',
+    sourceIds: [srcIcw.id], contradictedByClaimIds: [] });
   console.log('  ✓ seed_clm_rekening');
 
   // ---- 8. Relationships ----
 
-  await seedRelationship('seed_rel_bambang_rsud', uid, entBambang.id, entRsud.id, 'employed_by', 'established',
-    [srcSipp.id], new Date('2020-01-15T00:00:00Z'), new Date('2024-01-15T00:00:00Z'),
-    'Bambang menjabat sebagai Direktur RSUD Kabupaten Tambora berdasarkan SK Bupati No. 821/2020, dicopot setelah ditetapkan sebagai tersangka KPK.');
+  await seedRelationship({ id: 'seed_rel_bambang_rsud', uid,
+    fromEntityId: entBambang.id, toEntityId: entRsud.id, type: 'employed_by', certainty: 'established',
+    sourceIds: [srcSipp.id], activeFrom: new Date('2020-01-15T00:00:00Z'), activeTo: new Date('2024-01-15T00:00:00Z'),
+    description: 'Bambang menjabat sebagai Direktur RSUD Kabupaten Tambora berdasarkan SK Bupati No. 821/2020, dicopot setelah ditetapkan sebagai tersangka KPK.' });
   console.log('  ✓ seed_rel_bambang_rsud');
 
-  await seedRelationship('seed_rel_siti_rsud', uid, entSiti.id, entRsud.id, 'employed_by', 'established',
-    [srcSipp.id], new Date('2021-03-01T00:00:00Z'), null,
-    'Siti Rahayu menjabat sebagai Ketua Panitia Pengadaan Barang/Jasa RSUD Kabupaten Tambora sejak Maret 2021.');
+  await seedRelationship({ id: 'seed_rel_siti_rsud', uid,
+    fromEntityId: entSiti.id, toEntityId: entRsud.id, type: 'employed_by', certainty: 'established',
+    sourceIds: [srcSipp.id], activeFrom: new Date('2021-03-01T00:00:00Z'), activeTo: null,
+    description: 'Siti Rahayu menjabat sebagai Ketua Panitia Pengadaan Barang/Jasa RSUD Kabupaten Tambora sejak Maret 2021.' });
   console.log('  ✓ seed_rel_siti_rsud');
 
-  await seedRelationship('seed_rel_bambang_ptmedika', uid, entBambang.id, entPtMedika.id, 'allegedly_paid', 'alleged',
-    [srcKpk.id, srcTempo.id], new Date('2022-06-01T00:00:00Z'), new Date('2023-07-31T00:00:00Z'),
-    'Diduga menerima gratifikasi dari PT Medika Sejahtera Utama melalui transfer ke rekening nominee atas nama anggota keluarga terdakwa.');
+  await seedRelationship({ id: 'seed_rel_bambang_ptmedika', uid,
+    fromEntityId: entBambang.id, toEntityId: entPtMedika.id, type: 'allegedly_paid', certainty: 'alleged',
+    sourceIds: [srcKpk.id, srcTempo.id], activeFrom: new Date('2022-06-01T00:00:00Z'), activeTo: new Date('2023-07-31T00:00:00Z'),
+    description: 'Diduga menerima gratifikasi dari PT Medika Sejahtera Utama melalui transfer ke rekening nominee atas nama anggota keluarga terdakwa.' });
   console.log('  ✓ seed_rel_bambang_ptmedika');
 
-  await seedRelationship('seed_rel_ptmedika_bambang', uid, entPtMedika.id, entBambang.id, 'owned_by', 'alleged',
-    [srcIcw.id], new Date('2019-08-01T00:00:00Z'), null,
-    'PT Medika Sejahtera Utama diduga dimiliki secara de facto oleh Dr. Bambang melalui Hartono Wibisono sebagai nominee pemegang saham tercatat.');
+  await seedRelationship({ id: 'seed_rel_ptmedika_bambang', uid,
+    fromEntityId: entPtMedika.id, toEntityId: entBambang.id, type: 'owned_by', certainty: 'alleged',
+    sourceIds: [srcIcw.id], activeFrom: new Date('2019-08-01T00:00:00Z'), activeTo: null,
+    description: 'PT Medika Sejahtera Utama diduga dimiliki secara de facto oleh Dr. Bambang melalui Hartono Wibisono sebagai nominee pemegang saham tercatat.' });
   console.log('  ✓ seed_rel_ptmedika_bambang');
 
-  await seedRelationship('seed_rel_bambang_kejati', uid, entBambang.id, entKejati.id, 'prosecuted_by', 'established',
-    [srcSipp.id], new Date('2024-01-22T00:00:00Z'), null,
-    'Dituntut oleh Jaksa Penuntut Umum Kejaksaan Tinggi DKI Jakarta dalam perkara tipikor RSUD Tambora dengan tuntutan 9 tahun penjara.');
+  await seedRelationship({ id: 'seed_rel_bambang_kejati', uid,
+    fromEntityId: entBambang.id, toEntityId: entKejati.id, type: 'prosecuted_by', certainty: 'established',
+    sourceIds: [srcSipp.id], activeFrom: new Date('2024-01-22T00:00:00Z'), activeTo: null,
+    description: 'Dituntut oleh Jaksa Penuntut Umum Kejaksaan Tinggi DKI Jakarta dalam perkara tipikor RSUD Tambora dengan tuntutan 9 tahun penjara.' });
   console.log('  ✓ seed_rel_bambang_kejati');
 
-  await seedRelationship('seed_rel_siti_kejati', uid, entSiti.id, entKejati.id, 'prosecuted_by', 'established',
-    [srcSipp.id], new Date('2024-01-22T00:00:00Z'), null,
-    'Dituntut bersama Dr. Bambang Prasetyo dalam berkas perkara yang sama, dengan tuntutan 5 tahun penjara.');
+  await seedRelationship({ id: 'seed_rel_siti_kejati', uid,
+    fromEntityId: entSiti.id, toEntityId: entKejati.id, type: 'prosecuted_by', certainty: 'established',
+    sourceIds: [srcSipp.id], activeFrom: new Date('2024-01-22T00:00:00Z'), activeTo: null,
+    description: 'Dituntut bersama Dr. Bambang Prasetyo dalam berkas perkara yang sama, dengan tuntutan 5 tahun penjara.' });
   console.log('  ✓ seed_rel_siti_kejati');
 
   console.log('\nSeed complete.');

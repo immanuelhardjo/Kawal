@@ -9,28 +9,15 @@ import ReactFlow, {
   getBezierPath,
   type EdgeProps,
   type Node,
+  type NodeChange,
   type Position,
 } from 'reactflow';
 import { useMemo, useState } from 'react';
 import { useKasusDetail } from './context.js';
-import { FilterChip } from './filter-chip.js';
 import { useVisibleGraph } from './hooks.js';
-import {
-  ALL_CERTAINTIES,
-  ALL_NODE_TYPES,
-  CERTAINTY_LABELS_BAHASA,
-  NODE_TYPE_LABELS_BAHASA,
-} from './labels.js';
 
-/**
- * Spec: relationship-graph "Peta Kasus rendered with React Flow",
- *                          "Certainty filter", "Node-type filter",
- *                          "Tap interactions and linked selection",
- *                          "Cluster detection overlay" (basic toggle).
- */
 interface PetaKasusProps {
-  readonly clusterThreshold?: number;
-  readonly onEdgeTap: (relationship: RelationshipDto) => void;
+  readonly onEdgeTap?: (relationship: RelationshipDto) => void;
 }
 
 // --- Node helpers -----------------------------------------------------------
@@ -212,20 +199,31 @@ const TAG_BG_STYLE = {
 
 // --- Component --------------------------------------------------------------
 
-export function PetaKasus({
-  clusterThreshold = 12,
-  onEdgeTap,
-}: PetaKasusProps): JSX.Element {
-  const { selectedEntityId, filters, actions } = useKasusDetail();
+export function PetaKasus({ onEdgeTap }: PetaKasusProps): JSX.Element {
+  const { selectedEntityId, actions } = useKasusDetail();
   const graph = useVisibleGraph();
-  const [collapsedClusters, setCollapsedClusters] = useState(false);
+  const [sessionPositions, setSessionPositions] = useState<Map<string, { x: number; y: number }>>(
+    new Map(),
+  );
 
   const layout = useMemo(() => buildLayout(graph.data?.nodes ?? []), [graph.data?.nodes]);
+
+  const handleNodesChange = (changes: NodeChange[]) => {
+    setSessionPositions((prev) => {
+      const next = new Map(prev);
+      for (const change of changes) {
+        if (change.type === 'position' && change.position) {
+          next.set(change.id, change.position);
+        }
+      }
+      return next;
+    });
+  };
 
   const flowNodes = useMemo<Node[]>(() => {
     const nodes = graph.data?.nodes ?? [];
     return nodes.map((entity) => {
-      const pos = layout.get(entity.id) ?? { x: 0, y: 0 };
+      const pos = sessionPositions.get(entity.id) ?? layout.get(entity.id) ?? { x: 0, y: 0 };
       const selected = entity.id === selectedEntityId;
       const accent = typeAccentColor(entity);
       return {
@@ -286,9 +284,6 @@ export function PetaKasus({
     });
   }, [graph.data?.edges]);
 
-  const nodeCount = graph.data?.nodes.length ?? 0;
-  const overThreshold = nodeCount > clusterThreshold;
-
   let graphContent: JSX.Element;
   if (graph.loading) {
     graphContent = (
@@ -312,6 +307,8 @@ export function PetaKasus({
         nodes={flowNodes}
         edges={flowEdges}
         edgeTypes={EDGE_TYPES}
+        nodesDraggable
+        onNodesChange={handleNodesChange}
         onNodeClick={(_, node) => {
           const entity = (node.data as { entity: EntityDto }).entity;
           actions.selectEntity(entity.id);
@@ -319,7 +316,7 @@ export function PetaKasus({
         onPaneClick={() => actions.selectEntity(null)}
         onEdgeClick={(_, edge) => {
           const rel = (edge.data as { edge: RelationshipDto }).edge;
-          onEdgeTap(rel);
+          onEdgeTap?.(rel);
         }}
         fitView
         attributionPosition="bottom-left"
@@ -332,67 +329,25 @@ export function PetaKasus({
   }
 
   return (
-    <section className="flex h-full flex-col" aria-labelledby="peta-kasus-heading">
-      <header className="flex flex-wrap items-center gap-2 border-b border-rule px-3 py-2">
-        <h2 id="peta-kasus-heading" className="text-sm font-medium uppercase tracking-wide text-chalk-muted">
-          Peta Kasus
-        </h2>
-        <span className="text-xs text-chalk-muted">{nodeCount} entitas</span>
-        <div className="ml-auto flex flex-wrap items-center gap-1">
-          <span className="text-xs text-chalk-muted">Tingkat kepastian:</span>
-          {ALL_CERTAINTIES.map((c) => (
-            <FilterChip
-              key={c}
-              label={CERTAINTY_LABELS_BAHASA[c]}
-              active={filters.certainties.includes(c)}
-              onToggle={() => actions.toggleCertainty(c)}
-            />
+    <div className="relative h-full">
+      <svg style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
+        <defs>
+          {[
+            ['knot-red',    '#C0392B'],
+            ['knot-gold',   '#D4A017'],
+            ['knot-blue',   '#3498DB'],
+            ['knot-purple', '#8E44AD'],
+            ['knot-grey',   '#9DB89A'],
+          ].map(([id, fill]) => (
+            <marker key={id} id={id} markerWidth="6" markerHeight="6" refX="3" refY="3">
+              <circle cx="3" cy="3" r="3" fill={fill} />
+            </marker>
           ))}
-        </div>
-        <div className="flex flex-wrap items-center gap-1">
-          <span className="text-xs text-chalk-muted">Tipe simpul:</span>
-          {ALL_NODE_TYPES.map((t) => (
-            <FilterChip
-              key={t}
-              label={NODE_TYPE_LABELS_BAHASA[t]}
-              active={filters.nodeTypes.includes(t)}
-              onToggle={() => actions.toggleNodeType(t)}
-            />
-          ))}
-        </div>
-        {overThreshold ? (
-          <button
-            type="button"
-            className="rounded-md border border-rule px-2 py-0.5 text-xs text-chalk-muted hover:text-chalk"
-            onClick={() => setCollapsedClusters((v) => !v)}
-            aria-pressed={collapsedClusters}
-          >
-            {collapsedClusters ? 'Buka klaster' : 'Tutup klaster'}
-          </button>
-        ) : null}
-      </header>
+        </defs>
+      </svg>
 
-      <div className="relative flex-1">
-        {/* Hidden SVG defs for knot circle markers — referenced via url(#id) */}
-        <svg style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
-          <defs>
-            {[
-              ['knot-red',    '#C0392B'],
-              ['knot-gold',   '#D4A017'],
-              ['knot-blue',   '#3498DB'],
-              ['knot-purple', '#8E44AD'],
-              ['knot-grey',   '#9DB89A'],
-            ].map(([id, fill]) => (
-              <marker key={id} id={id} markerWidth="6" markerHeight="6" refX="3" refY="3">
-                <circle cx="3" cy="3" r="3" fill={fill} />
-              </marker>
-            ))}
-          </defs>
-        </svg>
-
-        {graphContent}
-      </div>
-    </section>
+      {graphContent}
+    </div>
   );
 }
 

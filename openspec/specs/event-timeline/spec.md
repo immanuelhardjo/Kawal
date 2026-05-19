@@ -20,37 +20,37 @@ The system SHALL model an Event owned by exactly one user (`owner_user_id`), sco
 - **WHEN** a write attempts to persist an event whose source id or entity id refers to a row owned by a different user
 - **THEN** the system rejects the write at validation
 
-### Requirement: Garis Waktu rendered as a React Flow timeline
+### Requirement: Garis Waktu rendered as a react-chrono horizontal timeline
 
-The system SHALL render the Garis Waktu (timeline) as a React Flow canvas with Event nodes laid out along a date-ordered track. Each event node SHALL display the date, the headline, the certainty chip, and at least one source link — with certainty and source visible before the summary text in reading order. Tapping an event node SHALL expand the node (inline or via the linked Profil panel) to show the 1-paragraph plain-Bahasa-Indonesia summary and the verbatim source excerpt.
+The system SHALL render the Garis Waktu (timeline) using react-chrono in HORIZONTAL mode, with Event items laid out left-to-right in chronological order. Each event card SHALL display the date, the headline, the certainty chip, and the event type — with certainty visible before the summary text in reading order. Selecting an event card SHALL set the Kasus Detail screen's `asOfDate` to that event's date.
 
 #### Scenario: Rendering order
 
 - **GIVEN** a user's case with events on 2024-03-01, 2024-05-12, and 2025-01-20
 - **WHEN** the timeline is rendered for that case
-- **THEN** the React Flow canvas lays out three event nodes along the date axis in chronological order
-- **AND** the certainty chip and source link on each node visually precede the summary text
+- **THEN** react-chrono renders three cards in left-to-right chronological order (2024-03-01 leftmost, 2025-01-20 rightmost)
+- **AND** the certainty chip on each card visually precedes the summary text
 
-#### Scenario: Tap expand
+#### Scenario: Card selection sets asOfDate
 
-- **WHEN** the user taps a timeline event node
-- **THEN** the node expands inline (or surfaces in the Profil panel) showing the verbatim source excerpt, the source URL, and the archive URL, without navigating away from the Kasus Detail screen
+- **WHEN** the user clicks the event card dated 2024-05-12
+- **THEN** the Kasus Detail `asOfDate` becomes 2024-05-12
+- **AND** the Peta Kasus section re-renders to reflect the new date
+
+#### Scenario: Theme matches design system
+
+- **WHEN** the timeline is rendered
+- **THEN** card backgrounds use the board colour token, card text uses the chalk token, and active/selected indicators use the amber-pin token
 
 ### Requirement: Timeline drives the relationship-graph as-of-date
 
-The system SHALL treat the user's current selection within the Garis Waktu — the focused event node, or the position of a draggable timeline cursor — as the single `asOfDate` for the Kasus Detail screen. The Peta Kasus relationship graph SHALL render only entities and relationships active at the timeline-driven `asOfDate`. There SHALL NOT be a separate scrubber widget for the graph.
+The system SHALL treat the user's current card selection within the Garis Waktu as the single `asOfDate` for the Kasus Detail screen. The Peta Kasus relationship graph SHALL render only entities and relationships active at the timeline-driven `asOfDate`. There SHALL NOT be a separate scrubber widget for the graph.
 
 #### Scenario: Tapping a timeline event sets the graph's date
 
-- **WHEN** the user taps an event node dated 2024-06-15 in Garis Waktu
+- **WHEN** the user selects an event card dated 2024-06-15 in Garis Waktu
 - **THEN** the Kasus Detail `asOfDate` becomes 2024-06-15
 - **AND** the Peta Kasus re-renders to show only nodes and edges active on that date
-
-#### Scenario: Dragging the timeline cursor updates the graph continuously (debounced)
-
-- **WHEN** the user drags the timeline cursor across multiple dates
-- **THEN** the `asOfDate` updates as the cursor moves, debounced according to the configured interval
-- **AND** the Peta Kasus re-renders for each settled `asOfDate`
 
 #### Scenario: No standalone graph scrubber
 

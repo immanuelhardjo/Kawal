@@ -12,7 +12,6 @@ import { authRoutes } from './routes/auth.js';
 import { caseRoutes } from './routes/cases.js';
 import { entityRoutes } from './routes/entities.js';
 import { graphRoutes } from './routes/graph.js';
-import { ingestRoutes } from './routes/ingest.js';
 import { meRoutes } from './routes/me.js';
 import { revisionRoutes } from './routes/revisions.js';
 import { timelineRoutes } from './routes/timeline.js';
@@ -49,7 +48,6 @@ app.use('/entities', entityRoutes(composition));
 app.use('/timeline', timelineRoutes(composition));
 app.use('/graph', graphRoutes(composition));
 app.use('/revisions', revisionRoutes(composition));
-app.use('/ingest', ingestRoutes(composition));
 app.use('/ai', aiRoutes(composition));
 
 app.use(errorHandler);

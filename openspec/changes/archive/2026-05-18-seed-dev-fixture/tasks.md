@@ -63,5 +63,5 @@
 ## 9. Wire workspace script and verify
 
 - [x] 9.1 Add `"seed:dev": "dotenv -e apps/backend/.env -- tsx tools/seed-dev.ts"` to root `package.json` scripts (or use inline dotenv loading already in the script — prefer inline; skip this if the script loads dotenv itself)
-- [ ] 9.2 Run `pnpm seed:dev --email <your-dev-email>` and confirm exit code 0
-- [ ] 9.3 Start the dev server and navigate to the case detail page; confirm Garis Waktu shows 7 events, Peta Kasus shows 5 nodes and 6 edges, and Dosier shows all 5 entities
+- [x] 9.2 Run `pnpm seed:dev --email <your-dev-email>` and confirm exit code 0
+- [x] 9.3 Start the dev server and navigate to the case detail page; confirm Garis Waktu shows 7 events, Peta Kasus shows 5 nodes and 6 edges, and Dosier shows all 5 entities

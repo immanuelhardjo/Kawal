@@ -15,6 +15,13 @@
       "when": 1778943155808,
       "tag": "0001_next_black_cat",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1747526400000,
+      "tag": "0002_add_conversation_messages",
+      "breakpoints": true
     }
   ]
 }

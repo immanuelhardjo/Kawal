@@ -374,6 +374,30 @@ export const ingestActivity = sqliteTable(
   }),
 );
 
+// ---------- conversation messages ----------
+export const conversationMessages = sqliteTable(
+  'conversation_messages',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    caseId: text('case_id')
+      .notNull()
+      .references(() => cases.id, { onDelete: 'cascade' }),
+    question: text('question').notNull(),
+    answerText: text('answer_text').notNull(),
+    citedClaimIds: text('cited_claim_ids', { mode: 'json' }).$type<string[]>().notNull().default([]),
+    citedEventIds: text('cited_event_ids', { mode: 'json' }).$type<string[]>().notNull().default([]),
+    citedSourceIds: text('cited_source_ids', { mode: 'json' }).$type<string[]>().notNull().default([]),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  },
+  (t) => ({
+    userCaseIdx: index('conv_msgs_user_case_idx').on(t.userId, t.caseId),
+    createdAtIdx: index('conv_msgs_created_at_idx').on(t.createdAt),
+  }),
+);
+
 // ---------- audit log ----------
 export const auditLog = sqliteTable(
   'audit_log',
